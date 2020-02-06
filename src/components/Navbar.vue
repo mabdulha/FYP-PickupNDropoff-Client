@@ -53,4 +53,8 @@ export default {
   .v-toolbar__title {
     cursor: pointer;
   }
+
+  .v-toolbar__title:hover {
+    color: #9FA8DA;
+  }
 </style>
