@@ -1,3 +1,4 @@
+/* eslint-disable vue/valid-v-if */
 <template>
   <nav>
     <v-navigation-drawer v-model="drawer" app color="indigo lighten-1" dark>
@@ -22,13 +23,18 @@
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
-      <v-btn text class="hidden-sm-and-down" v-for="button in buttons" :key="button.text" router :to="button.route">
+      <v-toolbar-items v-if="!$store.state.isUserLoggedin">
+        <v-btn text class="hidden-sm-and-down" v-for="button in buttons" :key="button.text" router :to="button.route">
         <span>
           {{ button.text }}
         </span>
         <v-icon right>
           {{ button.icon }}
         </v-icon>
+      </v-btn>
+      </v-toolbar-items>
+      <v-btn text v-if="$store.state.isUserLoggedin" flat dark @click="logout">
+        logout
       </v-btn>
     </v-app-bar>
   </nav>
@@ -45,7 +51,14 @@ export default {
       { icon: 'mdi-login', text: 'Login', route: '/login/user' },
       { icon: 'mdi-account-box', text: 'Register', route: '/register/user' }
     ]
-  })
+  }),
+  methods: {
+    logout () {
+      this.$store.dispatch('setToken', null)
+      this.$store.dispatch('setUser', null)
+      this.$router.push('/')
+    }
+  }
 }
 </script>
 
