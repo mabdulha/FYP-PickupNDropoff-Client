@@ -154,6 +154,9 @@ export default {
     submit () {
       if (this.$refs.RegisterForm.validate()) {
         if (this.password === this.cpassword) {
+          if (this.avatar === '') {
+            this.avatar = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/avatars%2Fdefault-profile.png?alt=media&token=c0d9df92-b5f6-4526-bfc2-2a27d91519e0'
+          }
           var user = {
             avatar: this.avatar,
             fname: this.fname,

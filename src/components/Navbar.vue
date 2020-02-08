@@ -33,7 +33,7 @@
         </v-icon>
       </v-btn>
       </v-toolbar-items>
-      <v-btn text v-if="$store.state.isUserLoggedin" flat dark @click="logout">
+      <v-btn text v-if="$store.state.isUserLoggedin" dark @click="logout">
         logout
       </v-btn>
     </v-app-bar>
@@ -56,7 +56,11 @@ export default {
     logout () {
       this.$store.dispatch('setToken', null)
       this.$store.dispatch('setUser', null)
-      this.$router.push('/')
+      if (this.$router.currentRoute.path !== '/') {
+        this.$router.push('/')
+      } else {
+        window.location.reload()
+      }
     }
   }
 }
