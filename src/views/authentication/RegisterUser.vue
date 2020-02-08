@@ -10,14 +10,14 @@
             </v-toolbar>
             <v-card-text>
               <v-form ref="RegisterForm">
-                <v-btn class="primary" @click="filepick">
+                <v-btn class="primary" @click="onFilePick">
                   Upload Avatar
                 </v-btn>
                 <span>
                   (optional)
                 </span>
                 <input type="file"
-                        @change="uploadavatar"
+                        @change="onUploadAvatar"
                         style="display:none"
                         accept="image/*"
                         ref="fileinput"
@@ -128,10 +128,10 @@ export default {
     }
   },
   methods: {
-    filepick () {
+    onFilePick () {
       this.$refs.fileinput.click()
     },
-    uploadavatar (e) {
+    onUploadAvatar (e) {
       let image = e.target.files[0]
       let d = new Date()
       var storageRef = fb.storage().ref('avatars/' + d.getTime() + '-' + image.name)
