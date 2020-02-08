@@ -93,8 +93,8 @@
 </template>
 
 <script>
-import AuthService from '../../services/authservice'
-import { fb } from '../../firebase'
+import AuthService from '../../../services/authservice'
+import { fb } from '../../../firebase'
 
 export default {
   data () {
@@ -165,7 +165,6 @@ export default {
             address: this.address
           }
           this.user = user
-          console.log('Submitting in Register : ' + JSON.stringify(this.user, null, 5))
           this.submitUser(this.user)
         } else {
           this.$swal({
@@ -178,10 +177,26 @@ export default {
     submitUser: function (user) {
       AuthService.register(user)
         .then(response => {
-          console.log(response)
+          const credentials = {
+            username: user.username,
+            password: user.password
+          }
+          this.credentials = credentials
+          this.login(this.credentials)
         }).catch(error => {
           this.error = error.response.data.error
           console.log(error)
+        })
+    },
+    login: function (credentials) {
+      AuthService.login(credentials)
+        .then(response => {
+          this.$store.dispatch('setToken', response.data.token)
+          this.$store.dispatch('setUser', response.data.user)
+          this.$router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   }

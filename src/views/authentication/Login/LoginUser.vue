@@ -10,13 +10,13 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <v-text-field outlined label="Email" prepend-icon="mdi-email" v-model="email" />
+                <v-text-field outlined label="Username" prepend-icon="mdi-person" v-model="username" />
                 <v-text-field outlined label="Password" prepend-icon="mdi-lock" type="password" v-model="password" />
               </v-form>
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn dark color="indigo">Login</v-btn>
+              <v-btn dark @click="submit" color="indigo">Login</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -26,8 +26,41 @@
 </template>
 
 <script>
-export default {
+import Authservice from '../../../services/authservice'
 
+export default {
+  data () {
+    return {
+      username: '',
+      password: ''
+    }
+  },
+  methods: {
+    submit () {
+      var credentials = {
+        username: this.username,
+        password: this.password
+      }
+      this.credentials = credentials
+      this.login(credentials)
+    },
+    login: function (credentials) {
+      Authservice.login(credentials)
+        .then(response => {
+          console.log(response)
+          this.$store.dispatch('setToken', response.data.token)
+          this.$store.dispatch('setUser', response.data.user)
+          this.$router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
+          this.$swal({
+            title: `${err.response.data.message}`,
+            icon: 'error'
+          })
+        })
+    }
+  }
 }
 </script>
 

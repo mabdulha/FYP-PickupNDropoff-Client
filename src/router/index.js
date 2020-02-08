@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Register from '../views/authentication/Register.vue'
-import RegisterDriver from '../views/authentication/RegisterDriver.vue'
-import RegisterUser from '../views/authentication/RegisterUser.vue'
-import Login from '../views/authentication/Login.vue'
-import LoginDriver from '../views/authentication/LoginDriver.vue'
-import LoginUser from '../views/authentication/LoginUser.vue'
+import Register from '../views/authentication/register/Register.vue'
+import RegisterDriver from '../views/authentication/register/RegisterDriver'
+import RegisterUser from '../views/authentication/register/RegisterUser.vue'
+import Login from '../views/authentication/login/Login.vue'
+import LoginDriver from '../views/authentication/login/LoginDriver.vue'
+import LoginUser from '../views/authentication/login/LoginUser.vue'
 
 Vue.use(VueRouter)
 
