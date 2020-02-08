@@ -1,8 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Register from '../views/authentication/Register.vue'
+import RegisterUser from '../views/authentication/RegisterUser.vue'
 import Login from '../views/authentication/Login.vue'
+import LoginUser from '../views/authentication/LoginUser.vue'
+import LoginDriver from '../views/authentication/LoginDriver.vue'
 
 Vue.use(VueRouter)
 
@@ -21,14 +23,26 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
-    path: '/register',
-    name: 'register',
-    component: Register
+    path: '/register/user',
+    name: 'register/user',
+    component: RegisterUser
   },
   {
     path: '/login',
     name: 'login',
-    component: Login
+    component: Login,
+    children: [
+      {
+        path: 'user',
+        name: 'login-user',
+        component: LoginUser
+      },
+      {
+        path: 'driver',
+        name: 'login-driver',
+        component: LoginDriver
+      }
+    ]
   }
 ]
 

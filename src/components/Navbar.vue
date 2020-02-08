@@ -42,8 +42,8 @@ export default {
       { icon: 'mdi-home', text: 'Home', route: '/' }
     ],
     buttons: [
-      { icon: 'mdi-login', text: 'Login', route: '/login' },
-      { icon: 'mdi-account-box', text: 'Register', route: '/register' }
+      { icon: 'mdi-login', text: 'Login', route: '/login/user' },
+      { icon: 'mdi-account-box', text: 'Register', route: '/register/user' }
     ]
   })
 }

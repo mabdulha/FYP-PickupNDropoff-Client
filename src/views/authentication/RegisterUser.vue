@@ -13,49 +13,65 @@
                 <v-btn class="primary" @click="filepick">
                   Upload Avatar
                 </v-btn>
+                <span>
+                  (optional)
+                </span>
                 <input type="file"
                         @change="uploadavatar"
                         style="display:none"
                         accept="image/*"
                         ref="fileinput"
                         />
-                <v-text-field label="First Name"
+                <v-layout row>
+                  <v-flex xs12 sm6 offset-xs1>
+                    <img :src="avatar" height="200">
+                  </v-flex>
+                </v-layout>
+                <v-text-field outlined
+                              label="First Name"
                               v-model="fname"
                               :rules="[inputcheck('first name')]"
                               />
-                <v-text-field label="Last Name"
+                <v-text-field outlined
+                              label="Last Name"
                               v-model="lname"
                               :rules="[inputcheck('last name')]"
                               />
-                <v-text-field label="Username"
+                <v-text-field outlined
+                              label="Username"
                               v-model="username"
                               :rules="[inputcheck('username'), minlen('username', 3)]"
                               />
-                <v-text-field label="Email"
+                <v-text-field outlined
+                              label="Email"
                               v-model="email"
                               :rules="[inputcheck('email'), emailcheck('email')]"
                               />
-                <v-text-field label="Password"
+                <v-text-field outlined
+                              label="Password"
                               v-model="password"
                               :append-icon="value ? 'mdi-eye' : 'mdi-eye-off'"
                               @click:append="() => (value = !value)"
                               :type="value ? 'password' : 'text'"
                               :rules="[inputcheck('password'), minlen('password', 6)]"
                               />
-                <v-text-field label="Confirm Password"
+                <v-text-field outlined
+                              label="Confirm Password"
                               v-model="cpassword"
                               :append-icon="valuex ? 'mdi-eye' : 'mdi-eye-off'"
                               @click:append="() => (valuex = !valuex)"
                               :type="valuex ? 'password' : 'text'"
                               :rules="[inputcheck('password')]"
                               />
-                <v-text-field label="Phone"
+                <v-text-field outlined
+                              label="Phone"
                               type="text"
                               v-model="phone"
                               counter="10"
                               :rules="[inputcheck('phone number'), phonecheck('phone number')]"
                               />
-                <v-text-field label="Address"
+                <v-text-field outlined
+                              label="Address"
                               type="text"
                               v-model="address"
                               :rules="[inputcheck('address'), minlen('address', 5)]"
@@ -117,13 +133,15 @@ export default {
     },
     uploadavatar (e) {
       let image = e.target.files[0]
-      var storageRef = fb.storage().ref('avatars/' + image.name)
+      let d = new Date()
+      var storageRef = fb.storage().ref('avatars/' + d.getTime() + '-' + image.name)
       let uploadTask = storageRef.put(image)
 
       uploadTask.on('state_changed', (snapshot) => {
       // eslint-disable-next-line handle-callback-err
       }, (error) => {
         // Handle unsuccessful uploads
+        console.log(error)
       }, () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
