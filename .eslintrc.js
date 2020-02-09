@@ -1,7 +1,11 @@
 module.exports = {
   root: true,
   env: {
-    node: true
+    node: true,
+    mocha: true
+  },
+  'globals': {
+    'cy': true
   },
   'extends': [
     'plugin:vue/essential',

@@ -16,7 +16,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer />
-              <v-btn dark @click="submit" color="indigo">Login</v-btn>
+              <v-btn dark @click="submit" class='login-btn' color="indigo">Login</v-btn>
             </v-card-actions>
           </v-card>
         </v-col>
