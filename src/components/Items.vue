@@ -2,6 +2,7 @@
   <v-container>
     <v-layout row wrap>
       <v-flex xs12 sm8 md6 lg4 v-for="item in items" :key="item.name">
+        <v-container fluid>
         <v-card class="ma-5" shaped>
           <v-img
             class="indigo--text align-end"
@@ -18,9 +19,10 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="onClick(item._id)" color="blue" text> View </v-btn>
+            <v-btn @click="onItemView(item._id)" color="blue" text> View </v-btn>
           </v-card-actions>
         </v-card>
+        </v-container>
       </v-flex>
     </v-layout>
   </v-container>
@@ -50,8 +52,8 @@ export default {
           console.log(error)
         })
     },
-    onClick: function (id) {
-      alert(id)
+    onItemView: function (id) {
+      this.$router.push(`/view/item/${id}`)
     }
   }
 }
