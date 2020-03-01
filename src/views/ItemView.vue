@@ -5,13 +5,14 @@
         <v-card elevation-2>
           <v-img
           height="500px"
+          contain
           :src="item.imageurl"
           >
           </v-img>
           <v-card-title>
             <h4 class="primary--text"> {{ item.title }} </h4>
             <v-spacer></v-spacer>
-            <div>
+            <div class="info--text">
               € {{ item.price }}
             </div>
           </v-card-title>

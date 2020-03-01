@@ -6,5 +6,9 @@ export default {
   },
   fetchItem (id) {
     return Api().get(`/api/item/${id}`)
+  },
+  addItem (item) {
+    return Api().post('/api/item/add', item,
+      { headers: { 'Content-Type': 'application/json' } })
   }
 }

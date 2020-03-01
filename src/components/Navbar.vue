@@ -10,6 +10,7 @@
           <v-list-item-content>
             <v-list-item-title>{{ link.text }}</v-list-item-title>
           </v-list-item-content>
+
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -33,15 +34,23 @@
         </v-icon>
       </v-btn>
       </v-toolbar-items>
-      <v-btn text v-if="$store.state.isUserLoggedin" dark @click="logout">
+      <div v-if="$store.state.isUserLoggedin">
+        <PopupAdd />
+      <v-btn text dark @click="logout">
         logout
       </v-btn>
+      </div>
     </v-app-bar>
   </nav>
 </template>
 
 <script>
+import PopupAdd from './PopupAdd'
+
 export default {
+  components: {
+    PopupAdd
+  },
   data: () => ({
     drawer: false,
     links: [
