@@ -18,7 +18,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="onClick(item._id)" color="orange" text> View </v-btn>
+            <v-btn @click="onClick(item._id)" color="blue" text> View </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>

@@ -10,7 +10,7 @@
             </v-toolbar>
             <v-card-text>
               <v-form>
-                <v-text-field outlined label="Username" prepend-icon="mdi-person" v-model="username" />
+                <v-text-field outlined label="Username" prepend-icon="mdi-account" v-model="username" />
                 <v-text-field outlined label="Password" prepend-icon="mdi-lock" type="password" v-model="password" />
               </v-form>
             </v-card-text>
