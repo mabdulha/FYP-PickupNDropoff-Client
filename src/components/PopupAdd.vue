@@ -80,6 +80,9 @@ export default {
       inputcheck (propertyType) {
         return v => v.trim().length > 0 || `You must provide a ${propertyType}`
       },
+      minlen (propertyType, minlen) {
+        return v => v.trim().length >= minlen || `${propertyType} must be atleast ${minlen} characters long`
+      },
       dialog: false,
       title: '',
       description: '',

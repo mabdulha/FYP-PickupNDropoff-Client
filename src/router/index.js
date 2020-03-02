@@ -8,6 +8,7 @@ import Login from '../views/authentication/login/Login.vue'
 import LoginDriver from '../views/authentication/login/LoginDriver.vue'
 import LoginUser from '../views/authentication/login/LoginUser.vue'
 import ItemView from '../views/ItemView.vue'
+import UserItemView from '../views/UserItemView'
 
 Vue.use(VueRouter)
 
@@ -63,6 +64,11 @@ const routes = [
     path: '/view/item/:id',
     name: 'item-view',
     component: ItemView
+  },
+  {
+    path: '/view/items/my',
+    name: 'user-item-view',
+    component: UserItemView
   }
 ]
 

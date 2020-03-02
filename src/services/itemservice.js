@@ -10,5 +10,8 @@ export default {
   addItem (item) {
     return Api().post('/api/item/add', item,
       { headers: { 'Content-Type': 'application/json' } })
+  },
+  fetchItemsByUser (userID) {
+    return Api().get(`/api/user/${userID}/items`)
   }
 }

@@ -25,7 +25,7 @@
       </router-link>
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="!$store.state.isUserLoggedin">
-        <v-btn text class="hidden-sm-and-down" v-for="button in buttons" :key="button.text" router :to="button.route">
+        <v-btn text v-for="button in buttons" :key="button.text" router :to="button.route">
         <span>
           {{ button.text }}
         </span>
@@ -53,9 +53,6 @@ export default {
   },
   data: () => ({
     drawer: false,
-    links: [
-      { icon: 'mdi-home', text: 'Home', route: '/' }
-    ],
     buttons: [
       { icon: 'mdi-login', text: 'Login', route: '/login/user' },
       { icon: 'mdi-account-box', text: 'Register', route: '/register/user' }
@@ -70,6 +67,20 @@ export default {
       } else {
         window.location.reload()
       }
+    }
+  },
+  computed: {
+    links () {
+      let links = [
+        { icon: 'mdi-home', text: 'Home', route: '/' }
+      ]
+      if (this.$store.state.isUserLoggedin) {
+        links = [
+          { icon: 'mdi-home', text: 'Home', route: '/' },
+          { icon: 'mdi-home', text: 'My Items', route: '/view/items/my' }
+        ]
+      }
+      return links
     }
   }
 }
