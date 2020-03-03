@@ -7,6 +7,9 @@ import vuetify from './plugins/vuetify'
 import 'vuetify/dist/vuetify.min.css'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
+import VueFuse from 'vue-fuse'
+
+Vue.use(VueFuse)
 
 Vue.use(VueSweetalert2)
 

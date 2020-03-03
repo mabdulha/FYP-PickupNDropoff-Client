@@ -1,17 +1,5 @@
 <template>
-  <v-layout>
-    <v-flex offset-xs3 xs6>
-      <v-text-field
-        class="pa-0 ma-2"
-        outlined
-        rounded
-        clearable
-        label="Search for an item here..."
-        v-model="search"
-      >
-      </v-text-field>
-    </v-flex>
-  </v-layout>
+<div></div>
 </template>
 
 <script>

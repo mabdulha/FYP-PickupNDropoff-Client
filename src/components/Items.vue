@@ -1,7 +1,18 @@
 <template>
-  <v-container>
+  <div>
+    <v-layout>
+      <v-flex offset-xs3 xs6>
+         <vue-fuse class="search-bar"
+        placeholder="Search for items"
+        event-name="results"
+        :list="items"
+        :keys="['title', 'category']">
+      </vue-fuse>
+      </v-flex>
+    </v-layout>
+    <v-container>
     <v-layout row wrap>
-      <v-flex xs12 sm8 md6 lg4 v-for="item in items" :key="item.name">
+      <v-flex xs12 sm8 md6 lg4 v-for="item in results" :key="item.name">
         <v-container fluid>
         <v-card class="ma-5" shaped>
           <v-img
@@ -25,6 +36,7 @@
       </v-flex>
     </v-layout>
   </v-container>
+  </div>
 </template>
 
 <script>
@@ -33,11 +45,15 @@ import ItemService from '../services/itemservice'
 export default {
   data () {
     return {
-      items: []
+      items: [],
+      results: []
     }
   },
   created () {
     this.loadItems()
+    this.$on('results', results => {
+      this.results = results
+    })
   },
   methods: {
     loadItems: function () {
@@ -53,6 +69,11 @@ export default {
     },
     onItemView: function (id) {
       this.$router.push(`/view/item/${id}`)
+    },
+    runSearch () {
+      this.$search('', this.items, { keys: ['title', 'category'] }.then(result => {
+        this.results = result
+      }))
     }
   }
 }

@@ -26,37 +26,37 @@
                         />
                 <v-layout row>
                   <v-flex xs12 sm6 offset-xs1>
-                    <img :src="imageurl" height="200">
+                    <img :src="editedImageurl" height="200">
                   </v-flex>
                 </v-layout>
             <v-text-field
               outlined
               label="Title"
-              v-model="title"
+              v-model="editedTitle"
               :rules="[inputcheck('Title'), minlen('Title', 3)]"
             />
             <v-text-field
               outlined
               label="Description"
-              v-model="description"
+              v-model="editedDescription"
               :rules="[inputcheck('Description'), minlen('Description', 3)]"
             />
             <v-text-field
               outlined
               label="Category"
-              v-model="category"
+              v-model="editedCategory"
               :rules="[inputcheck('Category'), minlen('Category', 3)]"
             />
             <v-text-field
               outlined
               label="Size"
-              v-model="size"
+              v-model="editedSize"
               :rules="[inputcheck('Size')]"
             />
             <v-text-field
               outlined
               label="Price"
-              v-model="price"
+              v-model="editedPrice"
               :rules="[inputcheck('Price')]"
             />
           </v-form>
@@ -90,12 +90,12 @@ export default {
       },
       dialog: false,
       childDataLoaded: false,
-      title: this.item.title,
-      description: this.item.description,
-      category: this.item.category,
-      price: this.item.price,
-      size: this.item.size,
-      imageurl: this.item.imageurl
+      editedTitle: this.item.title,
+      editedDescription: this.item.description,
+      editedCategory: this.item.category,
+      editedPrice: this.item.price,
+      editedSize: this.item.size,
+      editedImageurl: this.item.imageurl
     }
   },
   methods: {
@@ -128,12 +128,12 @@ export default {
           this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Fno-image-available.jpg?alt=media&token=83425029-2cb6-4e6f-a325-9f83c2d7d17f'
         }
         var item = {
-          title: this.title,
-          description: this.description,
-          imageurl: this.imageurl,
-          category: this.category,
-          size: this.size,
-          price: this.price,
+          title: this.editedTitle,
+          description: this.editedDescription,
+          imageurl: this.editedImageurl,
+          category: this.editedCategory,
+          size: this.editedSize,
+          price: this.editedPrice,
           userID: this.$store.state.user._id
         }
         this.item = item
@@ -150,6 +150,11 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  watch: {
+    'item' () {
+      this.$emit('update:item', this.item)
     }
   }
 }
