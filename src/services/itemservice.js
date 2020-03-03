@@ -13,5 +13,12 @@ export default {
   },
   fetchItemsByUser (userID) {
     return Api().get(`/api/user/${userID}/items`)
+  },
+  updateItem (id, item) {
+    return Api().put(`/api/item/update/${id}`, item,
+      { headers: { 'Content-Type': 'application/json' } })
+  },
+  deleteItem (userID) {
+    return Api().delete(`/api/item/delete/${userID}`)
   }
 }

@@ -77,7 +77,7 @@ export default {
       if (this.$store.state.isUserLoggedin) {
         links = [
           { icon: 'mdi-home', text: 'Home', route: '/' },
-          { icon: 'mdi-home', text: 'My Items', route: '/view/items/my' }
+          { icon: 'mdi-bookmark', text: 'My Items', route: '/view/items/my' }
         ]
       }
       return links
