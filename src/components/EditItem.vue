@@ -137,13 +137,13 @@ export default {
           userID: this.$store.state.user._id
         }
         this.item = item
-        this.updateItem(this.itemid, item)
+        this.updateItem(this.itemid, this.item)
         console.log(item)
         this.dialog = false
       }
     },
-    updateItem: (item) => {
-      ItemService.updateItem(item)
+    updateItem: (itemId, item) => {
+      ItemService.updateItem(itemId, item)
         .then(response => {
           console.log(response)
         })

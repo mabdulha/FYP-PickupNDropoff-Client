@@ -20,7 +20,7 @@
           <v-card-actions>
             <v-btn @click="onItemView(item._id)" color="blue" text> View </v-btn>
             <v-spacer></v-spacer>
-               <EditItem :item="item" :itemid="item._id" @click="onItemUpdate" />
+               <EditItem :item="item" :itemid="item._id" />
             <v-btn @click="onItemDelete(item._id)" icon color="red">
               <v-icon>mdi-delete</v-icon>
             </v-btn>
@@ -65,9 +65,6 @@ export default {
     },
     onItemView: function (id) {
       this.$router.push(`/view/item/${id}`)
-    },
-    onItemUpdate: function (id) {
-      this.$emit('update-item')
     },
     onItemDelete: function (id) {
       this.$swal.fire({

@@ -23,6 +23,9 @@ export default new Vuex.Store({
     },
     setUser (state, user) {
       state.user = user
+    },
+    updateItem (state, item) {
+      state.item = item
     }
   },
   actions: {
@@ -31,6 +34,9 @@ export default new Vuex.Store({
     },
     setUser ({ commit }, user) {
       commit('setUser', user)
+    },
+    updateItem ({ commit }, item) {
+      commit('updateItem', item)
     }
   },
   modules: {
