@@ -137,12 +137,12 @@ export default {
           userID: this.$store.state.user._id
         }
         this.item = item
-        this.submitItem(this.itemid, this.item)
-        console.log(this.itemid)
+        this.updateItem(this.itemid, item)
+        console.log(item)
         this.dialog = false
       }
     },
-    submitItem: (item) => {
+    updateItem: (item) => {
       ItemService.updateItem(item)
         .then(response => {
           console.log(response)
@@ -150,11 +150,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    }
-  },
-  watch: {
-    'item' () {
-      this.$emit('update:item', this.item)
     }
   }
 }

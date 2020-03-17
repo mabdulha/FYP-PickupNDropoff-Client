@@ -80,4 +80,10 @@ export default {
 </script>
 
 <style scoped>
+.search-bar {
+  width: 100%;
+  padding: 1em;
+  border: solid indigo 1px;
+  border-radius: 25em;
+}
 </style>
