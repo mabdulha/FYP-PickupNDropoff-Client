@@ -86,4 +86,7 @@ export default {
   border: solid indigo 1px;
   border-radius: 25em;
 }
+input:focus, textarea:focus, select:focus{
+        outline: none
+    }
 </style>
