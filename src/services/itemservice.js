@@ -20,5 +20,8 @@ export default {
   },
   deleteItem (userID) {
     return Api().delete(`/api/item/delete/${userID}`)
+  },
+  upviewItem (id) {
+    return Api().put(`/api/item/incrementview/${id}`)
   }
 }

@@ -13,12 +13,13 @@
           <v-container fluid>
             <v-card class="ma-5" shaped>
               <v-img height="200px" contain :src="item.imageurl">
+                <v-card-subtitle class="text-end"> <v-icon class="pr-1">mdi-eye</v-icon> {{ item.views }} </v-card-subtitle>
               </v-img>
               <v-card-title class="indigo--text align-end"> {{ item.title }}
                 <v-spacer /> € {{ item.price }} </v-card-title>
               <v-card-subtitle class="pb-0"> {{ item.category }} </v-card-subtitle>
 
-              <v-card-text class="text--primary" style="overflow-y:auto; height: 100px;">
+              <v-card-text class="text--primary" style="overflow-y:auto; height: 50px;">
                 <div> {{ item.description }} </div>
               </v-card-text>
 
@@ -63,6 +64,13 @@ export default {
     },
     onItemView: function (id) {
       this.$router.push(`/view/item/${id}`)
+      ItemService.upviewItem(id)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
     },
     runSearch () {
       this.$search('', this.items, { keys: ['title', 'category'] }.then(result => {
