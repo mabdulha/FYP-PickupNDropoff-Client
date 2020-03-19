@@ -9,18 +9,18 @@
     </v-layout>
     <v-container>
       <v-layout row wrap>
-        <v-flex xs12 sm8 md6 lg4 v-for="item in results" :key="item.name">
+        <v-flex xs12 sm8 md6 lg4 v-for="item in results" :key="item._id">
           <v-container fluid>
             <v-card class="ma-5" shaped>
               <v-img height="200px" contain :src="item.imageurl">
                 <v-card-subtitle class="text-end"> <v-icon class="pr-1">mdi-eye</v-icon> {{ item.views }} </v-card-subtitle>
               </v-img>
               <v-card-title class="indigo--text align-end"> {{ item.title }}
-                <v-spacer /> € {{ item.price }} </v-card-title>
+                <v-spacer /> {{ item.price | currency('€') }} </v-card-title>
               <v-card-subtitle class="pb-0"> {{ item.category }} </v-card-subtitle>
 
-              <v-card-text class="text--primary" style="overflow-y:auto; height: 50px;">
-                <div> {{ item.description }} </div>
+              <v-card-text class="text--primary">
+                <div class="text-truncate"> {{ item.description }} </div>
               </v-card-text>
 
               <v-card-actions>
@@ -44,7 +44,7 @@ export default {
       results: []
     }
   },
-  created () {
+  mounted () {
     this.loadItems()
     this.$on('results', results => {
       this.results = results

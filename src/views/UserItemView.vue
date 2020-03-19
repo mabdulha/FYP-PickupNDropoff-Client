@@ -11,7 +11,7 @@
           >
           <v-card-subtitle class="text-end"> <v-icon class="pr-1">mdi-eye</v-icon> {{ item.views }} </v-card-subtitle>
           </v-img>
-          <v-card-title class="indigo--text align-end"> {{ item.title }} <v-spacer /> € {{ item.price }} </v-card-title>
+          <v-card-title class="indigo--text align-end"> {{ item.title }} <v-spacer /> {{ item.price | currency('€') }} </v-card-title>
           <v-card-subtitle class="pb-0"> {{ item.category }} </v-card-subtitle>
 
           <v-card-text class="text--primary">
