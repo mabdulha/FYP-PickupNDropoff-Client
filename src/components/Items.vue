@@ -9,7 +9,7 @@
     </v-layout>
     <v-container>
       <v-layout row wrap>
-        <v-flex xs12 sm8 md6 lg4 v-for="item in results" :key="item._id">
+        <v-flex xs12 sm8 md6 lg4 v-for="item in filteredResults" :key="item._id">
           <v-container fluid>
             <v-card class="ma-5" shaped>
               <v-img height="200px" contain :src="item.imageurl">
@@ -36,6 +36,7 @@
 
 <script>
 import ItemService from '../services/itemservice'
+import _ from 'lodash'
 
 export default {
   data () {
@@ -76,6 +77,11 @@ export default {
       this.$search('', this.items, { keys: ['title', 'category'] }.then(result => {
         this.results = result
       }))
+    }
+  },
+  computed: {
+    filteredResults: function () {
+      return _.orderBy(this.results, ['views'], ['desc'])
     }
   }
 }

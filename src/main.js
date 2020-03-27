@@ -22,5 +22,6 @@ new Vue({
   router,
   store,
   vuetify,
+  Vue2Filters,
   render: h => h(App)
 }).$mount('#app')
