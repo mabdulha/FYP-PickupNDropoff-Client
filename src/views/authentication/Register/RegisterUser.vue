@@ -13,7 +13,7 @@
         />
         <v-layout row>
           <v-flex xs12 sm6 offset-xs1>
-            <img :src="avatar" height="200" />
+            <img class="pa-2" :src="avatar" height="200" />
           </v-flex>
         </v-layout>
         <v-text-field
