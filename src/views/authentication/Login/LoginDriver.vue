@@ -19,17 +19,45 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn dark color="indigo">Login</v-btn>
+      <v-btn dark @click="submit" color="indigo">Login</v-btn>
     </v-card-actions>
   </div>
 </template>
 
 <script>
+import Authservice from '../../../services/authservice'
+
 export default {
   data () {
     return {
       email: '',
       password: ''
+    }
+  },
+  methods: {
+    submit () {
+      var credentials = {
+        email: this.email,
+        password: this.password
+      }
+      this.credentials = credentials
+      this.login(credentials)
+    },
+    login: function (credentials) {
+      Authservice.loginDriver(credentials)
+        .then(response => {
+          console.log(response)
+          this.$store.dispatch('setToken', response.data.token)
+          this.$store.dispatch('setDriver', response.data.driver)
+          this.$router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
+          this.$swal.fire({
+            title: `${err.response.data.message}`,
+            type: 'error'
+          })
+        })
     }
   }
 }

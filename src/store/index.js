@@ -10,6 +10,7 @@ export default new Vuex.Store({
   state: {
     token: null,
     user: null,
+    driver: null,
     isUserLoggedin: false
   },
   mutations: {
@@ -24,8 +25,8 @@ export default new Vuex.Store({
     setUser (state, user) {
       state.user = user
     },
-    updateItem (state, item) {
-      state.item = item
+    setDriver (state, driver) {
+      state.driver = driver
     }
   },
   actions: {
@@ -35,8 +36,8 @@ export default new Vuex.Store({
     setUser ({ commit }, user) {
       commit('setUser', user)
     },
-    updateItem ({ commit }, item) {
-      commit('updateItem', item)
+    setDriver ({ commit }, driver) {
+      commit('setDriver', driver)
     }
   },
   modules: {

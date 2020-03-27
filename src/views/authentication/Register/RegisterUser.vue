@@ -178,7 +178,7 @@ export default {
       }
     },
     submitUser: function (user) {
-      AuthService.register(user)
+      AuthService.registerUser(user)
         .then(response => {
           const credentials = {
             username: user.username,
@@ -193,7 +193,7 @@ export default {
         })
     },
     login: function (credentials) {
-      AuthService.login(credentials)
+      AuthService.loginUser(credentials)
         .then(response => {
           this.$store.dispatch('setToken', response.data.token)
           this.$store.dispatch('setUser', response.data.user)

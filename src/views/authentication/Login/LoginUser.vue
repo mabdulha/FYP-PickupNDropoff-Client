@@ -39,7 +39,7 @@ export default {
       this.login(credentials)
     },
     login: function (credentials) {
-      Authservice.login(credentials)
+      Authservice.loginUser(credentials)
         .then(response => {
           console.log(response)
           this.$store.dispatch('setToken', response.data.token)
@@ -48,9 +48,9 @@ export default {
         })
         .catch(err => {
           console.log(err)
-          this.$swal({
+          this.$swal.fire({
             title: `${err.response.data.message}`,
-            icon: 'error'
+            type: 'error'
           })
         })
     }
