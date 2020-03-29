@@ -186,7 +186,7 @@ export default {
     login: function (credentials) {
       AuthService.loginDriver(credentials)
         .then(response => {
-          this.$store.dispatch('setToken', response.data.token)
+          this.$store.dispatch('setDriverToken', response.data.token)
           this.$store.dispatch('setDriver', response.data.driver)
           this.$router.push('/')
         }).catch(error => {

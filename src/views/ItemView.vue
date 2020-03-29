@@ -39,7 +39,7 @@ export default {
       item: []
     }
   },
-  created () {
+  mounted () {
     this.loadItem()
   },
   methods: {

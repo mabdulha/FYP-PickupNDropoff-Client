@@ -11,15 +11,24 @@ export default new Vuex.Store({
     token: null,
     user: null,
     driver: null,
-    isUserLoggedin: false
+    isUserLoggedin: false,
+    isDriverLoggedin: false
   },
   mutations: {
-    setToken (state, token) {
+    setUserToken (state, token) {
       state.token = token
       if (token) {
         state.isUserLoggedin = true
       } else {
         state.isUserLoggedin = false
+      }
+    },
+    setDriverToken (state, token) {
+      state.token = token
+      if (token) {
+        state.isDriverLoggedin = true
+      } else {
+        state.isDriverLoggedin = false
       }
     },
     setUser (state, user) {
@@ -30,8 +39,11 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    setToken ({ commit }, token) {
-      commit('setToken', token)
+    setUserToken ({ commit }, token) {
+      commit('setUserToken', token)
+    },
+    setDriverToken ({ commit }, token) {
+      commit('setDriverToken', token)
     },
     setUser ({ commit }, user) {
       commit('setUser', user)

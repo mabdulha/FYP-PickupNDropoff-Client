@@ -42,7 +42,7 @@ export default {
       Authservice.loginUser(credentials)
         .then(response => {
           console.log(response)
-          this.$store.dispatch('setToken', response.data.token)
+          this.$store.dispatch('setUserToken', response.data.token)
           this.$store.dispatch('setUser', response.data.user)
           this.$router.push('/')
         })
