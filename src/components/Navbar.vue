@@ -24,7 +24,7 @@
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
-      <v-toolbar-items v-if="!$store.state.isUserLoggedin">
+      <v-toolbar-items v-if="!$store.state.isUserLoggedin && !$store.state.isDriverLoggedin">
         <v-btn text v-for="button in buttons" :key="button.text" router :to="button.route">
         <span>
           {{ button.text }}
@@ -34,8 +34,10 @@
         </v-icon>
       </v-btn>
       </v-toolbar-items>
-      <div v-if="$store.state.isUserLoggedin">
-        <PopupAdd />
+      <div v-if="$store.state.isUserLoggedin | $store.state.isDriverLoggedin">
+        <div v-if="$store.state.isUserLoggedin">
+          <PopupAdd />
+        </div>
       <v-btn text dark @click="logout">
         logout
       </v-btn>
@@ -60,8 +62,10 @@ export default {
   }),
   methods: {
     logout () {
-      this.$store.dispatch('setToken', null)
+      this.$store.dispatch('setDriverToken', null)
+      this.$store.dispatch('setUserToken', null)
       this.$store.dispatch('setUser', null)
+      this.$store.dispatch('setDriver', null)
       if (this.$router.currentRoute.path !== '/') {
         this.$router.push('/')
       } else {
