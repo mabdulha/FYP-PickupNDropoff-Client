@@ -20,11 +20,16 @@
             {{ item.description }}
           </v-card-text>
           <v-card-actions>
-            <v-btn tile outlined color="primary">
+            <v-btn tile outlined @click="onPurchase" color="primary">
               <v-icon left>mdi-credit-card-outline</v-icon> Purchase
             </v-btn>
           </v-card-actions>
         </v-card>
+      </v-flex>
+    </v-layout>
+    <v-layout v-if="loadpurchase == true" row wrap>
+      <v-flex>
+        <purchaseitem :item="item" />
       </v-flex>
     </v-layout>
   </v-container>
@@ -32,11 +37,16 @@
 
 <script>
 import ItemService from '../services/itemservice'
+import purchaseitem from '@/components/PurchaseItem.vue'
 
 export default {
+  components: {
+    purchaseitem
+  },
   data () {
     return {
-      item: []
+      item: [],
+      loadpurchase: false
     }
   },
   mounted () {
@@ -54,6 +64,9 @@ export default {
         .catch(error => {
           console.log(error)
         })
+    },
+    onPurchase () {
+      this.loadpurchase = true
     }
   }
 }
