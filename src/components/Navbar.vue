@@ -34,11 +34,9 @@
         </v-icon>
       </v-btn>
       </v-toolbar-items>
-      <div v-if="$store.state.isUserLoggedin | $store.state.isDriverLoggedin">
-        <div v-if="$store.state.isUserLoggedin">
-          <PopupAdd />
-        </div>
-      <v-btn text dark @click="logout">
+      <div>
+        <span v-if="$store.state.isUserLoggedin"><PopupAdd /></span>
+      <v-btn v-if="$store.state.isUserLoggedin || $store.state.isDriverLoggedin" left text dark @click="logout">
         logout
       </v-btn>
       </div>
