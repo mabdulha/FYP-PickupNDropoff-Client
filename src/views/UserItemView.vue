@@ -19,7 +19,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn @click="onItemView(item._id)" color="blue" text> View </v-btn>
+            <!-- <v-btn @click="onItemView(item._id)" color="blue" text> View </v-btn> -->
             <v-spacer></v-spacer>
                <EditItem :item="item" :itemid="item._id" />
             <v-btn @click="onItemDelete(item._id)" icon color="red">
