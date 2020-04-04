@@ -9,11 +9,11 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 import VueFuse from 'vue-fuse'
 import Vue2Filters from 'vue2-filters'
+import DatetimePicker from 'vuetify-datetime-picker'
 
+Vue.use(DatetimePicker)
 Vue.use(Vue2Filters)
-
 Vue.use(VueFuse)
-
 Vue.use(VueSweetalert2)
 
 Vue.config.productionTip = false

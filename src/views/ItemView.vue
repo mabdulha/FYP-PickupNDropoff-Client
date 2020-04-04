@@ -13,14 +13,14 @@
             <h4 class="primary--text"> {{ item.title }} </h4>
             <v-spacer></v-spacer>
             <div class="info--text">
-              € {{ item.price }}
+              {{ item.price | currency('€') }}
             </div>
           </v-card-title>
           <v-card-text>
             {{ item.description }}
           </v-card-text>
           <v-card-actions>
-            <v-btn tile outlined @click="onPurchase" color="primary">
+            <v-btn v-show="loadpurchase == false && this.$store.state.user._id != this.item.userID" tile outlined @click="onPurchase" color="primary">
               <v-icon left>mdi-credit-card-outline</v-icon> Purchase
             </v-btn>
           </v-card-actions>
