@@ -53,6 +53,41 @@
           v-model="size"
           :rules="[inputcheck('size'), minlen('size', 3)]"
         />
+        <v-text-field
+          outlined
+          label="Street Line 1"
+          type="text"
+          v-model="aLine1"
+          :rules="[inputcheck('street line 1')]"
+        />
+        <v-text-field
+          outlined
+          label="Street Line 2"
+          type="text"
+          v-model="aLine2"
+          :rules="[inputcheck('street line 2')]"
+        />
+        <v-text-field
+          outlined
+          label="County"
+          type="text"
+          v-model="aCounty"
+          :rules="[inputcheck('county')]"
+        />
+        <v-text-field
+          outlined
+          label="Town"
+          type="text"
+          v-model="aTown"
+          :rules="[inputcheck('town')]"
+        />
+        <v-text-field
+          outlined
+          label="Eircode"
+          type="text"
+          v-model="aEircode"
+          :rules="[inputcheck('eircode')]"
+        />
       </v-form>
       <v-btn class="primary" @click="onFilePick">Upload License</v-btn>
         <span class="pl-2">(mandatory)</span>
@@ -107,6 +142,11 @@ export default {
       phone: '',
       license: '',
       size: '',
+      aLine1: '',
+      aLine2: '',
+      aTown: '',
+      aCounty: '',
+      aEircode: '',
       value: true,
       valuex: true,
       error: null,
@@ -154,7 +194,12 @@ export default {
             password: this.password,
             phone: this.phone,
             license: this.license,
-            size: this.size
+            size: this.size,
+            aLine1: this.aLine1,
+            aLine2: this.aLine2,
+            aTown: this.aTown,
+            aCounty: this.aCounty,
+            aEircode: this.aEircode
           }
           this.driver = driver
           this.submitDriver(driver)

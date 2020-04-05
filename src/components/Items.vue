@@ -12,7 +12,7 @@
         <v-flex xs12 sm8 md6 lg4 v-for="item in filteredResults" :key="item._id">
           <v-container fluid>
             <v-card class="ma-5" shaped>
-              <v-img height="200px" contain :src="item.imageurl">
+              <v-img height="221px" contain :src="item.imageurl">
                 <v-card-subtitle class="text-end"> <v-icon class="pr-1">mdi-eye</v-icon> {{ item.views }} </v-card-subtitle>
               </v-img>
               <v-card-title class="indigo--text align-end"> {{ item.title }}
@@ -24,7 +24,7 @@
               </v-card-text>
 
               <v-card-actions>
-                <v-btn @click="onItemView(item._id)" color="blue" text> View </v-btn>
+                <v-btn @click="onItemView(item._id, item.userID)" color="blue" text> View </v-btn>
               </v-card-actions>
             </v-card>
           </v-container>
@@ -63,15 +63,17 @@ export default {
           console.log(error)
         })
     },
-    onItemView: function (id) {
+    onItemView: function (id, userID) {
       this.$router.push(`/view/item/${id}`)
-      ItemService.upviewItem(id)
-        .then(response => {
-          console.log(response)
-        })
-        .catch(error => {
-          console.log(error)
-        })
+      if (this.$store.state.user._id !== userID) {
+        ItemService.upviewItem(id)
+          .then(response => {
+            console.log(response)
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      }
     },
     runSearch () {
       this.$search('', this.items, { keys: ['title', 'category'] }.then(result => {

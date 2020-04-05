@@ -4,7 +4,7 @@
       <v-flex xs12>
         <v-card elevation-2>
           <v-img
-          height="500px"
+          max-height="500px"
           contain
           :src="item.imageurl"
           >

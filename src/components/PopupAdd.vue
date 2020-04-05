@@ -19,6 +19,7 @@
                         @change="onUploadImage"
                         style="display:none"
                         accept="image/*"
+                        capture="environment"
                         ref="fileinput"
                         />
                 <v-layout row>
@@ -53,9 +54,56 @@
             <v-text-field
               outlined
               label="Price"
+              type="number"
               v-model="price"
               :rules="[inputcheck('Price')]"
             />
+            <v-container fluid>
+              <p>
+                Is the Pickup Address the same as your Address?
+              </p>
+              <v-radio-group v-model="option" column :mandatory="true">
+                <v-radio selected default label="Yes" color="indigo" value="yes"></v-radio>
+                <v-radio label="No" color="indigo" value="no"></v-radio>
+              </v-radio-group>
+            </v-container>
+            <div v-if="option == 'no'">
+              <v-text-field
+              outlined
+              label="Street Line 1"
+              type="text"
+              v-model="pLine1"
+              :rules="[inputcheck('street line 1')]"
+            />
+            <v-text-field
+              outlined
+              label="Street Line 2"
+              type="text"
+              v-model="pLine2"
+              :rules="[inputcheck('street line 2')]"
+            />
+            <v-text-field
+              outlined
+              label="County"
+              type="text"
+              v-model="pCounty"
+              :rules="[inputcheck('county')]"
+            />
+            <v-text-field
+              outlined
+              label="Town"
+              type="text"
+              v-model="pTown"
+              :rules="[inputcheck('town')]"
+            />
+            <v-text-field
+              outlined
+              label="Eircode"
+              type="text"
+              v-model="pEircode"
+              :rules="[inputcheck('eircode')]"
+            />
+            </div>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -84,13 +132,19 @@ export default {
         return v => v.trim().length >= minlen || `${propertyType} must be atleast ${minlen} characters long`
       },
       dialog: false,
+      option: null,
       title: '',
       description: '',
       imageurl: '',
       category: '',
       size: '',
       price: '',
-      userID: ''
+      userID: '',
+      pLine1: this.$store.state.user.aLine1,
+      pLine2: this.$store.state.user.aLine2,
+      pTown: this.$store.state.user.aTown,
+      pCounty: this.$store.state.user.aCounty,
+      pEircode: this.$store.state.user.aEircode
     }
   },
   methods: {
@@ -120,7 +174,7 @@ export default {
     submit () {
       if (this.$refs.AddItemForm.validate()) {
         if (this.imageurl === '') {
-          this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Fno-image-available.jpg?alt=media&token=83425029-2cb6-4e6f-a325-9f83c2d7d17f'
+          this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Funavailable-image.jpg?alt=media&token=798dc11b-c68d-4bb7-9fcb-198eb49727f0'
         }
         var item = {
           title: this.title,
@@ -129,7 +183,12 @@ export default {
           category: this.category,
           size: this.size,
           price: this.price,
-          userID: this.$store.state.user._id
+          userID: this.$store.state.user._id,
+          pLine1: this.pLine1,
+          pLine2: this.pLine2,
+          pTown: this.pTown,
+          pCounty: this.pCounty,
+          pEircode: this.pEircode
         }
         this.item = item
         this.submitItem(this.item)
@@ -141,6 +200,7 @@ export default {
         .then(response => {
           console.log(response)
           console.log(item)
+          window.location.reload()
         })
         .catch(err => {
           console.log(err)

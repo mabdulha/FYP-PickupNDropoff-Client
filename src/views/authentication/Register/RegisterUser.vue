@@ -68,10 +68,38 @@
         />
         <v-text-field
           outlined
-          label="Address"
+          label="Street Line 1"
           type="text"
-          v-model="address"
-          :rules="[inputcheck('address'), minlen('address', 5)]"
+          v-model="aLine1"
+          :rules="[inputcheck('street line 1')]"
+        />
+        <v-text-field
+          outlined
+          label="Street Line 2"
+          type="text"
+          v-model="aLine2"
+          :rules="[inputcheck('street line 2')]"
+        />
+        <v-text-field
+          outlined
+          label="County"
+          type="text"
+          v-model="aCounty"
+          :rules="[inputcheck('county')]"
+        />
+        <v-text-field
+          outlined
+          label="Town"
+          type="text"
+          v-model="aTown"
+          :rules="[inputcheck('town')]"
+        />
+        <v-text-field
+          outlined
+          label="Eircode"
+          type="text"
+          v-model="aEircode"
+          :rules="[inputcheck('eircode')]"
         />
       </v-form>
     </v-card-text>
@@ -112,7 +140,11 @@ export default {
       password: '',
       cpassword: '',
       phone: '',
-      address: '',
+      aLine1: '',
+      aLine2: '',
+      aTown: '',
+      aCounty: '',
+      aEircode: '',
       value: true,
       valuex: true,
       error: null,
@@ -165,7 +197,11 @@ export default {
             email: this.email,
             password: this.password,
             phone: this.phone,
-            address: this.address
+            aLine1: this.aLine1,
+            aLine2: this.aLine2,
+            aTown: this.aTown,
+            aCounty: this.aCounty,
+            aEircode: this.aEircode
           }
           this.user = user
           this.submitUser(this.user)

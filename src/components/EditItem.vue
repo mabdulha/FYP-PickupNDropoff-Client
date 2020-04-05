@@ -26,7 +26,7 @@
                         />
                 <v-layout row>
                   <v-flex xs12 sm6 offset-xs1>
-                    <img :src="editedImageurl" height="200">
+                    <img class="pa-3" :src="editedImageurl" height="200">
                   </v-flex>
                 </v-layout>
             <v-text-field
@@ -56,8 +56,44 @@
             <v-text-field
               outlined
               label="Price"
+              type="number"
               v-model="editedPrice"
               :rules="[inputcheck('Price')]"
+            />
+            <v-text-field
+              outlined
+              label="Street Line 1"
+              type="text"
+              v-model="editedPLine1"
+              :rules="[inputcheck('street line 1')]"
+            />
+            <v-text-field
+              outlined
+              label="Street Line 2"
+              type="text"
+              v-model="editedPLine2"
+              :rules="[inputcheck('street line 2')]"
+            />
+            <v-text-field
+              outlined
+              label="County"
+              type="text"
+              v-model="editedPCounty"
+              :rules="[inputcheck('county')]"
+            />
+            <v-text-field
+              outlined
+              label="Town"
+              type="text"
+              v-model="editedPTown"
+              :rules="[inputcheck('town')]"
+            />
+            <v-text-field
+              outlined
+              label="Eircode"
+              type="text"
+              v-model="editedPEircode"
+              :rules="[inputcheck('eircode')]"
             />
           </v-form>
         </v-card-text>
@@ -95,7 +131,12 @@ export default {
       editedCategory: this.item.category,
       editedPrice: this.item.price,
       editedSize: this.item.size,
-      editedImageurl: this.item.imageurl
+      editedImageurl: this.item.imageurl,
+      editedPLine1: this.item.pLine1,
+      editedPLine2: this.item.pLine2,
+      editedPTown: this.item.pTown,
+      editedPCounty: this.item.pCounty,
+      editedPEircode: this.item.pEircode
     }
   },
   methods: {
@@ -118,15 +159,12 @@ export default {
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
           console.log('File available at', downloadURL)
-          this.imageurl = downloadURL.toString()
+          this.editedImageurl = downloadURL.toString()
         })
       })
     },
     submit () {
       if (this.$refs.EditItemForm.validate()) {
-        if (this.imageurl === '') {
-          this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Fno-image-available.jpg?alt=media&token=83425029-2cb6-4e6f-a325-9f83c2d7d17f'
-        }
         var item = {
           title: this.editedTitle,
           description: this.editedDescription,
@@ -134,7 +172,13 @@ export default {
           category: this.editedCategory,
           size: this.editedSize,
           price: this.editedPrice,
-          userID: this.$store.state.user._id
+          userID: this.$store.state.user._id,
+          pLine1: this.editedPLine1,
+          pLine2: this.editedPLine2,
+          pTown: this.editedPTown,
+          pCounty: this.editedPCounty,
+          pEircode: this.editedPEircode
+
         }
         this.item = item
         this.updateItem(this.itemid, this.item)
@@ -146,6 +190,7 @@ export default {
       ItemService.updateItem(itemId, item)
         .then(response => {
           console.log(response)
+          window.location.reload()
         })
         .catch(err => {
           console.log(err)

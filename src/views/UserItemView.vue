@@ -5,7 +5,7 @@
         <v-container fluid>
         <v-card class="ma-5" shaped>
           <v-img
-            height="200px"
+            height="221px"
             contain
             :src="item.imageurl"
           >
