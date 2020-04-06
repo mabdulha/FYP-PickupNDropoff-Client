@@ -88,6 +88,13 @@
           v-model="aEircode"
           :rules="[inputcheck('eircode')]"
         />
+        <v-text-field
+          outlined
+          label="Preferred Towns"
+          type="text"
+          v-model="preferredTowns"
+          :rules="[inputcheck('preferred towns')]"
+        />
       </v-form>
       <v-btn class="primary" @click="onFilePick">Upload License</v-btn>
         <span class="pl-2">(mandatory)</span>
@@ -147,6 +154,7 @@ export default {
       aTown: '',
       aCounty: '',
       aEircode: '',
+      preferredTowns: '',
       value: true,
       valuex: true,
       error: null,
@@ -199,7 +207,8 @@ export default {
             aLine2: this.aLine2,
             aTown: this.aTown,
             aCounty: this.aCounty,
-            aEircode: this.aEircode
+            aEircode: this.aEircode,
+            preferredTowns: this.preferredTowns
           }
           this.driver = driver
           this.submitDriver(driver)

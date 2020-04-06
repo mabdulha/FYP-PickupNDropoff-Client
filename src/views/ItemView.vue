@@ -29,7 +29,7 @@
     </v-layout>
     <v-layout v-if="loadpurchase == true" row wrap>
       <v-flex>
-        <purchaseitem :item="item" />
+        <purchaseitem :item="item" :itemid="this.item._id" />
       </v-flex>
     </v-layout>
   </v-container>

@@ -8,64 +8,90 @@
     </div>
     <div v-if="option == 'delivery'">
         <v-form ref="DeliveryAddress" lazy-validation>
+          <h2 class="pb-3"> Delivery Address </h2>
           <v-text-field
-            label="Street Name"
-            v-model="stName"
-            :rules="NameRules"
-            required
-          ></v-text-field>
-          <v-text-field
-            label="E-mail"
-            v-model="email"
-            :rules="emailRules"
-            required
-          ></v-text-field>
-          <v-select
-            label="Item"
-            v-model="select"
-            :items="items"
-            :rules="[v => !!v || 'Item is required']"
-            required
-          ></v-select>
-          <v-checkbox
-            label="Do you agree?"
-            v-model="checkbox"
-            :rules="[v => !!v || 'You must agree to continue!']"
-            required
-          ></v-checkbox>
-
-          <v-btn
-            @click="submit"
-            :disabled="!valid"
-          >
-            submit
-          </v-btn>
-          <v-btn @click="clear">clear</v-btn>
+          outlined
+          label="Street Line 1"
+          type="text"
+          v-model="dLine1"
+          :rules="[inputcheck('street line 1')]"
+        />
+        <v-text-field
+          outlined
+          label="Street Line 2"
+          type="text"
+          v-model="dLine2"
+          :rules="[inputcheck('street line 2')]"
+        />
+        <v-text-field
+          outlined
+          label="County"
+          type="text"
+          v-model="dCounty"
+          :rules="[inputcheck('county')]"
+        />
+        <v-text-field
+          outlined
+          label="Town"
+          type="text"
+          v-model="dTown"
+          :rules="[inputcheck('town')]"
+        />
+        <v-text-field
+          outlined
+          label="Eircode"
+          type="text"
+          v-model="dEircode"
+          :rules="[inputcheck('eircode')]"
+        />
+        <v-btn
+        color="primary"
+        @click="submit"
+        >
+          Update Address
+        </v-btn>
         </v-form>
-      <v-row>
+      <!-- <v-row>
       <v-col cols="6">
-        <v-datetime-picker label="Select Dropoff Date and Time" v-model="datetime"></v-datetime-picker>
+        <v-datetime-picker label="Select Dropoff Date and Time" v-model="datetime" date-format="dd/MM/yyyy"></v-datetime-picker>
       </v-col>
       <v-col cols="6">
         <v-datetime-picker label="Select Datetime2" v-model="datetime2"></v-datetime-picker>
       </v-col>
-    </v-row>
+    </v-row> -->
     </div>
     <div ref="paypal" />
   </v-container>
 </template>
 
 <script>
+import ItemService from '../services/itemservice'
+
 const dotenv = require('dotenv')
 dotenv.config()
+
 export default {
-  props: ['item'],
+  props: ['item', 'itemid'],
   data () {
     return {
+      inputcheck (propertyType) {
+        return v => v.trim().length > 0 || `You must provide a ${propertyType}`
+      },
+      minlen (propertyType, minlen) {
+        return v =>
+          v.trim().length >= minlen ||
+          `${propertyType} must be atleast ${minlen} characters long`
+      },
       loaded: false,
       option: null,
-      datetime: null,
-      datetime2: null
+      option2: null,
+      // datetime: null,
+      // datetime2: null,
+      dLine1: this.$store.state.user.aLine1,
+      dLine2: this.$store.state.user.aLine2,
+      dTown: this.$store.state.user.aTown,
+      dCounty: this.$store.state.user.aCounty,
+      dEircode: this.$store.state.user.aEircode
     }
   },
   mounted () {
@@ -95,6 +121,29 @@ export default {
           }
         })
         .render(this.$refs.paypal)
+    },
+    submit () {
+      if (this.$refs.DeliveryAddress.validate()) {
+        var item = {
+          dLine1: this.dLine1,
+          dLine2: this.dLine2,
+          dTown: this.dTown,
+          dCounty: this.dCounty,
+          dEircode: this.dEircode
+        }
+        this.item = item
+        this.updateItem(this.itemid, this.item)
+        console.log(item)
+      }
+    },
+    updateItem: (itemid, item) => {
+      ItemService.updateItem(itemid, item)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   }
 }
