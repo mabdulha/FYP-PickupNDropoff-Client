@@ -109,7 +109,7 @@
         <v-card-actions>
               <v-spacer />
               <v-btn dark color="indigo"
-                          @click="submit"
+                          @click="getLatlng"
                           >
                           Add Item
                           </v-btn>
@@ -121,6 +121,10 @@
 <script>
 import ItemService from '../services/itemservice'
 import { fb } from '../firebase'
+import axios from 'axios'
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 export default {
   data () {
@@ -144,7 +148,10 @@ export default {
       pLine2: this.$store.state.user.aLine2,
       pTown: this.$store.state.user.aTown,
       pCounty: this.$store.state.user.aCounty,
-      pEircode: this.$store.state.user.aEircode
+      pEircode: this.$store.state.user.aEircode,
+      pGeometry: [],
+      plat: null,
+      plng: null
     }
   },
   methods: {
@@ -171,6 +178,20 @@ export default {
         })
       })
     },
+    getLatlng () {
+      var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.pEircode}&components=country:IE`)
+        .then(response => {
+          this.plat = response.data.results[0].geometry.location.lat
+          this.plng = response.data.results[0].geometry.location.lng
+          console.log(this.plat)
+          console.log(this.plng)
+          this.submit()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     submit () {
       if (this.$refs.AddItemForm.validate()) {
         if (this.imageurl === '') {
@@ -188,7 +209,10 @@ export default {
           pLine2: this.pLine2,
           pTown: this.pTown,
           pCounty: this.pCounty,
-          pEircode: this.pEircode
+          pEircode: this.pEircode,
+          pGeometry: this.pGeometry,
+          plat: this.plat,
+          plng: this.plng
         }
         this.item = item
         this.submitItem(this.item)
