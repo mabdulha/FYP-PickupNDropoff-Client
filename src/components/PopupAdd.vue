@@ -39,23 +39,26 @@
               v-model="description"
               :rules="[inputcheck('Description'), minlen('Description', 3)]"
             />
-            <v-text-field
+            <v-select
               outlined
-              label="Category"
+              :items="categories"
               v-model="category"
-              :rules="[inputcheck('Category'), minlen('Category', 3)]"
-            />
-            <v-text-field
+              label="Category"
+              :rules="[inputcheck('Category')]"
+            ></v-select>
+            <v-select
               outlined
-              label="Size"
+              :items="sizes"
               v-model="size"
+              label="Size"
               :rules="[inputcheck('Size')]"
-            />
+            ></v-select>
             <v-text-field
               outlined
               label="Price"
-              type="number"
               v-model="price"
+              prefix="€"
+              type="number"
               :rules="[inputcheck('Price')]"
             />
             <v-container fluid>
@@ -82,19 +85,21 @@
               v-model="pLine2"
               :rules="[inputcheck('street line 2')]"
             />
-            <v-text-field
+            <v-select
               outlined
-              label="County"
-              type="text"
+              :items="counties"
               v-model="pCounty"
-              :rules="[inputcheck('county')]"
+              label="County"
+              @change="getTowns(pCounty)"
+              :rules="[inputcheck('County')]"
             />
-            <v-text-field
+            <v-select
               outlined
-              label="Town"
-              type="text"
+              :items="towns"
               v-model="pTown"
-              :rules="[inputcheck('town')]"
+              label="Town"
+              item-text="town"
+              :rules="[inputcheck('Town')]"
             />
             <v-text-field
               outlined
@@ -120,6 +125,7 @@
 
 <script>
 import ItemService from '../services/itemservice'
+import TownService from '../services/townservice'
 import { fb } from '../firebase'
 import axios from 'axios'
 
@@ -143,16 +149,23 @@ export default {
       category: '',
       size: '',
       price: '',
-      userID: '',
-      pLine1: this.$store.state.user.aLine1,
-      pLine2: this.$store.state.user.aLine2,
-      pTown: this.$store.state.user.aTown,
-      pCounty: this.$store.state.user.aCounty,
-      pEircode: this.$store.state.user.aEircode,
+      userID: this.$store.state.user._id,
+      pLine1: '',
+      pLine2: '',
+      pTown: '',
+      pCounty: '',
+      pEircode: '',
       pGeometry: [],
+      counties: [],
+      towns: [],
+      categories: ['Clothing', 'Electonics', 'Furniture', 'Health', 'Music', 'Parts', 'Outdoor', 'Other'],
+      sizes: ['Small', 'Medium', 'Large'],
       plat: null,
       plng: null
     }
+  },
+  created () {
+    this.getCounties()
   },
   methods: {
     onFilePick () {
@@ -178,6 +191,18 @@ export default {
         })
       })
     },
+    getCounties: function () {
+      TownService.fetchCounties()
+        .then(response => {
+          this.counties = response.data[0].counties
+        })
+    },
+    getTowns: function (county) {
+      TownService.fetchTowns(county)
+        .then(response => {
+          this.towns = response.data
+        })
+    },
     getLatlng () {
       var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
       axios.get(`https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.pEircode}&components=country:IE`)
@@ -197,24 +222,45 @@ export default {
         if (this.imageurl === '') {
           this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Funavailable-image.jpg?alt=media&token=798dc11b-c68d-4bb7-9fcb-198eb49727f0'
         }
-        var item = {
-          title: this.title,
-          description: this.description,
-          imageurl: this.imageurl,
-          category: this.category,
-          size: this.size,
-          price: this.price,
-          userID: this.$store.state.user._id,
-          pLine1: this.pLine1,
-          pLine2: this.pLine2,
-          pTown: this.pTown,
-          pCounty: this.pCounty,
-          pEircode: this.pEircode,
-          pGeometry: this.pGeometry,
-          plat: this.plat,
-          plng: this.plng
+        if (this.option === 'yes') {
+          var item = {
+            title: this.title,
+            description: this.description,
+            imageurl: this.imageurl,
+            category: this.category,
+            size: this.size,
+            price: this.price,
+            userID: this.userID,
+            pLine1: this.$store.state.user.aLine1,
+            pLine2: this.$store.state.user.aLine2,
+            pTown: this.$store.state.user.aTown,
+            pCounty: this.$store.state.user.aCounty,
+            pEircode: this.$store.state.user.aEircode,
+            pGeometry: this.pGeometry,
+            plat: this.plat,
+            plng: this.plng
+          }
+          this.item = item
+        } else {
+          var item2 = {
+            title: this.title,
+            description: this.description,
+            imageurl: this.imageurl,
+            category: this.category,
+            size: this.size,
+            price: this.price,
+            userID: this.$store.state.user._id,
+            pLine1: this.pLine1,
+            pLine2: this.pLine2,
+            pTown: this.pTown,
+            pCounty: this.pCounty,
+            pEircode: this.pEircode,
+            pGeometry: this.pGeometry,
+            plat: this.plat,
+            plng: this.plng
+          }
+          this.item = item2
         }
-        this.item = item
         this.submitItem(this.item)
         this.dialog = false
       }
@@ -229,6 +275,12 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  watch: {
+    pCounty: function (newVal, oldVal) {
+      this.pCounty = newVal
+      console.log(this.pCounty)
     }
   }
 }
