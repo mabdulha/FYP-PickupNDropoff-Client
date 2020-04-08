@@ -46,13 +46,14 @@
           counter="10"
           :rules="[inputcheck('phone number'), phonecheck('phone number')]"
         />
-        <v-text-field
+        <v-select
           outlined
-          label="Size"
-          type="text"
+          :items="sizes"
           v-model="size"
-          :rules="[inputcheck('size'), minlen('size', 3)]"
-        />
+          label="Vehicle Size"
+          :rules="[inputcheck('vehicle size')]"
+          @change="getCounties"
+        ></v-select>
         <v-text-field
           outlined
           label="Street Line 1"
@@ -67,18 +68,20 @@
           v-model="aLine2"
           :rules="[inputcheck('street line 2')]"
         />
-        <v-text-field
+        <v-select
           outlined
-          label="County"
-          type="text"
+          :items="counties"
           v-model="aCounty"
+          label="County"
+          @change="getTowns(aCounty)"
           :rules="[inputcheck('county')]"
         />
-        <v-text-field
+        <v-select
           outlined
-          label="Town"
-          type="text"
+          :items="towns"
           v-model="aTown"
+          label="Town"
+          item-text="town"
           :rules="[inputcheck('town')]"
         />
         <v-text-field
@@ -114,14 +117,19 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn dark color="indigo" @click="submit">Register</v-btn>
+      <v-btn dark color="indigo" @click="getLatlng">Register</v-btn>
     </v-card-actions>
   </div>
 </template>
 
 <script>
 import AuthService from '../../../services/authservice'
+import TownService from '../../../services/townservice'
 import { fb } from '../../../firebase'
+import axios from 'axios'
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 export default {
   data () {
@@ -158,7 +166,13 @@ export default {
       value: true,
       valuex: true,
       error: null,
-      driver: {}
+      driver: {},
+      sizes: ['Car', 'Caravan', 'Motorbike', 'Pickup', 'Van'],
+      counties: [],
+      towns: [],
+      aGeometry: [],
+      alat: null,
+      alng: null
     }
   },
   methods: {
@@ -192,6 +206,33 @@ export default {
         }
       )
     },
+    getCounties: function () {
+      TownService.fetchCounties()
+        .then(response => {
+          this.counties = response.data[0].counties
+          console.log(this.counties)
+        })
+    },
+    getTowns: function (county) {
+      TownService.fetchTowns(county)
+        .then(response => {
+          this.towns = response.data
+        })
+    },
+    getLatlng () {
+      var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.aEircode}&components=country:IE`)
+        .then(response => {
+          this.alat = response.data.results[0].geometry.location.lat
+          this.alng = response.data.results[0].geometry.location.lng
+          console.log(this.alat)
+          console.log(this.alng)
+          this.submit()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     submit () {
       if (this.$refs.RegisterDriverForm.validate()) {
         if (this.password === this.cpassword) {
@@ -208,6 +249,9 @@ export default {
             aTown: this.aTown,
             aCounty: this.aCounty,
             aEircode: this.aEircode,
+            aGeometry: this.aGeometry,
+            alat: this.alat,
+            alng: this.alng,
             preferredTowns: this.preferredTowns
           }
           this.driver = driver
@@ -246,6 +290,12 @@ export default {
         }).catch(error => {
           console.log(error)
         })
+    }
+  },
+  watch: {
+    aCounty: function (newVal, oldVal) {
+      this.aCounty = newVal
+      console.log(this.aCounty)
     }
   }
 }

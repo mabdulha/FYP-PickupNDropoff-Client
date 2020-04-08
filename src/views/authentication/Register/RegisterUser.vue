@@ -2,7 +2,7 @@
   <div>
     <v-card-text>
       <v-form ref="RegisterUserForm">
-        <v-btn class="primary" @click="onFilePick">Upload Avatar</v-btn>
+        <v-btn class="primary" @click="onFilePick(), getCounties()">Upload Avatar</v-btn>
         <span class="pl-2">(optional)</span>
         <input
           type="file"
@@ -80,18 +80,20 @@
           v-model="aLine2"
           :rules="[inputcheck('street line 2')]"
         />
-        <v-text-field
+        <v-select
           outlined
-          label="County"
-          type="text"
+          :items="counties"
           v-model="aCounty"
+          label="County"
+          @change="getTowns(aCounty)"
           :rules="[inputcheck('county')]"
         />
-        <v-text-field
+        <v-select
           outlined
-          label="Town"
-          type="text"
+          :items="towns"
           v-model="aTown"
+          label="Town"
+          item-text="town"
           :rules="[inputcheck('town')]"
         />
         <v-text-field
@@ -105,14 +107,19 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer />
-      <v-btn dark color="indigo" @click="submit">Register</v-btn>
+      <v-btn dark color="indigo" @click="getLatlng">Register</v-btn>
     </v-card-actions>
   </div>
 </template>
 
 <script>
 import AuthService from '../../../services/authservice'
+import TownService from '../../../services/townservice'
 import { fb } from '../../../firebase'
+import axios from 'axios'
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 export default {
   data () {
@@ -148,7 +155,12 @@ export default {
       value: true,
       valuex: true,
       error: null,
-      user: {}
+      user: {},
+      counties: [],
+      towns: [],
+      aGeometry: [],
+      alat: null,
+      alng: null
     }
   },
   methods: {
@@ -182,6 +194,33 @@ export default {
         }
       )
     },
+    getCounties: function () {
+      TownService.fetchCounties()
+        .then(response => {
+          this.counties = response.data[0].counties
+          console.log(this.counties)
+        })
+    },
+    getTowns: function (county) {
+      TownService.fetchTowns(county)
+        .then(response => {
+          this.towns = response.data
+        })
+    },
+    getLatlng () {
+      var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.aEircode}&components=country:IE`)
+        .then(response => {
+          this.alat = response.data.results[0].geometry.location.lat
+          this.alng = response.data.results[0].geometry.location.lng
+          console.log(this.alat)
+          console.log(this.alng)
+          this.submit()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     submit () {
       if (this.$refs.RegisterUserForm.validate()) {
         if (this.password === this.cpassword) {
@@ -201,7 +240,10 @@ export default {
             aLine2: this.aLine2,
             aTown: this.aTown,
             aCounty: this.aCounty,
-            aEircode: this.aEircode
+            aEircode: this.aEircode,
+            aGeometry: this.aGeometry,
+            alat: this.alat,
+            alng: this.alng
           }
           this.user = user
           this.submitUser(this.user)
@@ -238,6 +280,12 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  watch: {
+    aCounty: function (newVal, oldVal) {
+      this.aCounty = newVal
+      console.log(this.aCounty)
     }
   }
 }

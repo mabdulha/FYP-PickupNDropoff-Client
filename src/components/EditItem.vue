@@ -58,7 +58,7 @@
               label="Price"
               type="number"
               v-model="editedPrice"
-              :rules="[inputcheck('Price')]"
+              prefix="€"
             />
             <v-text-field
               outlined
@@ -74,19 +74,20 @@
               v-model="editedPLine2"
               :rules="[inputcheck('street line 2')]"
             />
-            <v-text-field
+            <v-select
               outlined
-              label="County"
-              type="text"
+              :items="counties"
               v-model="editedPCounty"
-              :rules="[inputcheck('county')]"
+              label="County"
+              :rules="[inputcheck('County')]"
             />
-            <v-text-field
+            <v-select
               outlined
-              label="Town"
-              type="text"
+              :items="towns"
               v-model="editedPTown"
-              :rules="[inputcheck('town')]"
+              label="Town"
+              item-text="town"
+              :rules="[inputcheck('Town')]"
             />
             <v-text-field
               outlined
@@ -100,7 +101,7 @@
         <v-card-actions>
               <v-spacer />
               <v-btn dark color="indigo"
-                          @click="submit"
+                          @click="getLatlng"
                           >
                           Edit Item
                           </v-btn>
@@ -112,7 +113,12 @@
 
 <script>
 import ItemService from '../services/itemservice'
+import TownService from '../services/townservice'
 import { fb } from '../firebase'
+import axios from 'axios'
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 export default {
   props: ['item', 'itemid'],
@@ -136,8 +142,19 @@ export default {
       editedPLine2: this.item.pLine2,
       editedPTown: this.item.pTown,
       editedPCounty: this.item.pCounty,
-      editedPEircode: this.item.pEircode
+      editedPEircode: this.item.pEircode,
+      editedGeometry: this.item.pGeometry,
+      editedLat: this.item.plat,
+      editedLng: this.item.plng,
+      categories: ['Clothing', 'Electonics', 'Furniture', 'Health', 'Music', 'Parts', 'Outdoor', 'Other'],
+      sizes: ['Small', 'Medium', 'Large'],
+      counties: [],
+      towns: []
     }
+  },
+  created () {
+    this.getCounties()
+    this.getTowns(this.editedPCounty)
   },
   methods: {
     onFilePick () {
@@ -163,6 +180,32 @@ export default {
         })
       })
     },
+    getCounties: function () {
+      TownService.fetchCounties()
+        .then(response => {
+          this.counties = response.data[0].counties
+        })
+    },
+    getTowns: function (county) {
+      TownService.fetchTowns(county)
+        .then(response => {
+          this.towns = response.data
+        })
+    },
+    getLatlng () {
+      var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
+      axios.get(`https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.editedPEircode}&components=country:IE`)
+        .then(response => {
+          this.editedLat = response.data.results[0].geometry.location.lat
+          this.editedLng = response.data.results[0].geometry.location.lng
+          console.log(this.editedLat)
+          console.log(this.editedLng)
+          this.submit()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     submit () {
       if (this.$refs.EditItemForm.validate()) {
         var item = {
@@ -177,8 +220,10 @@ export default {
           pLine2: this.editedPLine2,
           pTown: this.editedPTown,
           pCounty: this.editedPCounty,
-          pEircode: this.editedPEircode
-
+          pEircode: this.editedPEircode,
+          pGeometry: this.editedGeometry,
+          plat: this.editedLat,
+          plng: this.editedLng
         }
         this.item = item
         this.updateItem(this.itemid, this.item)
@@ -195,6 +240,12 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  watch: {
+    editedPCounty: function (newVal, oldVal) {
+      this.editedPCounty = newVal
+      console.log(this.editedPCounty)
     }
   }
 }
