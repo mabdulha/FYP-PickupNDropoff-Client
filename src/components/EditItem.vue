@@ -72,13 +72,13 @@
               label="Street Line 2"
               type="text"
               v-model="editedPLine2"
-              :rules="[inputcheck('street line 2')]"
             />
             <v-select
               outlined
               :items="counties"
               v-model="editedPCounty"
               label="County"
+              @change="getTowns(editedPCounty)"
               :rules="[inputcheck('County')]"
             />
             <v-select

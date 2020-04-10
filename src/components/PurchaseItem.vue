@@ -7,35 +7,39 @@
       </v-radio-group>
     </div>
     <div v-if="option == 'delivery'">
-        <v-form ref="DeliveryAddress" lazy-validation>
-          <h2 class="pb-3"> Delivery Address </h2>
-          <v-text-field
+      <v-form ref="DeliveryAddressForm">
+        <div>
+          <v-datetime-picker
+            label="Select Dropoff Date and Time"
+            v-model="datetime"
+            :text-field-props="textFieldProps"
+            date-format="dd/MM/yyyy"
+          ></v-datetime-picker>
+        </div>
+        <h2 class="pb-3">Delivery Address</h2>
+        <v-text-field
           outlined
           label="Street Line 1"
           type="text"
           v-model="dLine1"
           :rules="[inputcheck('street line 1')]"
         />
-        <v-text-field
+        <v-text-field outlined label="Street Line 2" type="text" v-model="dLine2" />
+        <v-select
           outlined
-          label="Street Line 2"
-          type="text"
-          v-model="dLine2"
-          :rules="[inputcheck('street line 2')]"
-        />
-        <v-text-field
-          outlined
-          label="County"
-          type="text"
+          :items="counties"
           v-model="dCounty"
-          :rules="[inputcheck('county')]"
+          label="County"
+          @change="getTowns(dCounty)"
+          :rules="[inputcheck('County')]"
         />
-        <v-text-field
+        <v-select
           outlined
-          label="Town"
-          type="text"
+          :items="towns"
           v-model="dTown"
-          :rules="[inputcheck('town')]"
+          label="Town"
+          item-text="town"
+          :rules="[inputcheck('Town')]"
         />
         <v-text-field
           outlined
@@ -44,31 +48,24 @@
           v-model="dEircode"
           :rules="[inputcheck('eircode')]"
         />
-        <v-btn
-        color="primary"
-        @click="submit"
-        >
-          Update Address
-        </v-btn>
-        </v-form>
-      <!-- <v-row>
-      <v-col cols="6">
-        <v-datetime-picker label="Select Dropoff Date and Time" v-model="datetime" date-format="dd/MM/yyyy"></v-datetime-picker>
-      </v-col>
-      <v-col cols="6">
-        <v-datetime-picker label="Select Datetime2" v-model="datetime2"></v-datetime-picker>
-      </v-col>
-    </v-row> -->
+        <v-btn color="primary" @click="getLatlng">Update Address</v-btn>
+      </v-form>
     </div>
-    <div ref="paypal" />
+    <v-container fluid>
+      <div ref="paypal" />
+    </v-container>
   </v-container>
 </template>
 
 <script>
 import ItemService from '../services/itemservice'
+import TownService from '../services/townservice'
+import axios from 'axios'
 
 const dotenv = require('dotenv')
 dotenv.config()
+
+var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
 
 export default {
   props: ['item', 'itemid'],
@@ -85,22 +82,70 @@ export default {
       loaded: false,
       option: null,
       option2: null,
-      // datetime: null,
-      // datetime2: null,
+      datetime: null,
+      status: 'purchased',
       dLine1: this.$store.state.user.aLine1,
       dLine2: this.$store.state.user.aLine2,
       dTown: this.$store.state.user.aTown,
       dCounty: this.$store.state.user.aCounty,
-      dEircode: this.$store.state.user.aEircode
+      dEircode: this.$store.state.user.aEircode,
+      buyerID: this.$store.state.user._id,
+      dGeometry: [],
+      dlat: null,
+      dlng: null,
+      counties: [],
+      towns: [],
+      textFieldProps: {
+        outlined: true,
+        prependInnerIcon: 'calendar_today'
+      }
     }
   },
-  mounted () {
-    const script = document.createElement('script')
-    script.src = process.env.VUE_APP_PAYPAL_API
-    script.addEventListener('load', this.setLoaded)
-    document.body.appendChild(script)
+  created () {
+    this.getCounties()
+    this.getTowns(this.dCounty)
+    this.paypalScript()
+  },
+  async mounted () {
+
   },
   methods: {
+    paypalScript () {
+      const script = document.createElement('script')
+      script.src = process.env.VUE_APP_PAYPAL_API
+      script.addEventListener('load', this.setLoaded)
+      document.body.appendChild(script)
+    },
+    getCounties: function () {
+      TownService.fetchCounties().then(response => {
+        this.counties = response.data[0].counties
+      })
+    },
+    getTowns: function (county) {
+      TownService.fetchTowns(county).then(response => {
+        this.towns = response.data
+      })
+    },
+    getLatlng () {
+      axios
+        .get(
+          `https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.dEircode}&components=country:IE`
+        )
+        .then(response => {
+          this.dlat = response.data.results[0].geometry.location.lat
+          this.dlng = response.data.results[0].geometry.location.lng
+          console.log(this.dlat)
+          console.log(this.dlng)
+          this.getDistance()
+          // this.submit()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getDistance () {
+
+    },
     setLoaded () {
       this.loaded = true
       window.paypal
@@ -121,15 +166,22 @@ export default {
           }
         })
         .render(this.$refs.paypal)
+      this.submit()
     },
     submit () {
-      if (this.$refs.DeliveryAddress.validate()) {
+      if (this.$refs.DeliveryAddressForm.validate()) {
         var item = {
+          status: this.status,
           dLine1: this.dLine1,
           dLine2: this.dLine2,
           dTown: this.dTown,
           dCounty: this.dCounty,
-          dEircode: this.dEircode
+          dEircode: this.dEircode,
+          dGeometry: this.dGeometry,
+          buyerID: this.buyerID,
+          dlat: this.dlat,
+          dlng: this.dlng,
+          datetime: this.datetime
         }
         this.item = item
         this.updateItem(this.itemid, this.item)
@@ -144,6 +196,20 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  watch: {
+    dCounty: function (newVal, oldVal) {
+      this.dCounty = newVal
+      console.log(this.dCounty)
+    }
+  },
+  computed: {
+    origin: function () {
+      return this.item.pLine1 + ',' + this.item.pLine2 + ',' + this.item.pCounty
+    },
+    destination: function () {
+      return this.dLine1 + ',' + this.dLine2 + ',' + this.dCounty
     }
   }
 }

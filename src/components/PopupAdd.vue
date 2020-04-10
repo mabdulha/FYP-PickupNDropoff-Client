@@ -83,7 +83,6 @@
               label="Street Line 2"
               type="text"
               v-model="pLine2"
-              :rules="[inputcheck('street line 2')]"
             />
             <v-select
               outlined
@@ -143,6 +142,7 @@ export default {
       },
       dialog: false,
       option: null,
+      status: 'available',
       title: '',
       description: '',
       imageurl: '',
@@ -224,6 +224,7 @@ export default {
         }
         if (this.option === 'yes') {
           var item = {
+            status: this.status,
             title: this.title,
             description: this.description,
             imageurl: this.imageurl,
@@ -243,6 +244,7 @@ export default {
           this.item = item
         } else {
           var item2 = {
+            status: this.status,
             title: this.title,
             description: this.description,
             imageurl: this.imageurl,

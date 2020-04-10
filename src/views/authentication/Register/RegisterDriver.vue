@@ -66,7 +66,6 @@
           label="Street Line 2"
           type="text"
           v-model="aLine2"
-          :rules="[inputcheck('street line 2')]"
         />
         <v-select
           outlined
