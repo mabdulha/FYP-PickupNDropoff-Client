@@ -48,11 +48,37 @@
           v-model="dEircode"
           :rules="[inputcheck('eircode')]"
         />
-        <v-btn color="primary" @click="getLatlng">Update Address</v-btn>
+        <v-btn color="primary" @click="getLatlng">Calculate Charge</v-btn>
+        <v-layout column>
+          <v-simple-table class="pt-5" v-if="distanceloaded == true" height="200px">
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="subtitle-1 text-left">Distance</th>
+                <th class="subtitle-1 text-right">Item Size</th>
+                <th class="subtitle-1 text-center">Estimated Delivery Charge</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-left">
+                  {{ distance.text }}
+                </td>
+                <td class="text-right">
+                  {{ item.size }}
+                </td>
+                <td class="text-center">
+                  {{ calcDistAmount | currency('€') }}
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+        </v-layout>
       </v-form>
     </div>
     <v-container fluid>
-      <div ref="paypal" />
+      <div align="center" class="pt-4" ref="paypal" />
     </v-container>
   </v-container>
 </template>
@@ -80,10 +106,11 @@ export default {
           `${propertyType} must be atleast ${minlen} characters long`
       },
       loaded: false,
+      distanceloaded: false,
       option: null,
       option2: null,
       datetime: null,
-      status: 'purchased',
+      status: '',
       dLine1: this.$store.state.user.aLine1,
       dLine2: this.$store.state.user.aLine2,
       dTown: this.$store.state.user.aTown,
@@ -97,17 +124,18 @@ export default {
       towns: [],
       textFieldProps: {
         outlined: true,
-        prependInnerIcon: 'calendar_today'
-      }
+        prependInnerIcon: 'calendar_today',
+        solo: true
+      },
+      distance: {}
     }
   },
   created () {
     this.getCounties()
     this.getTowns(this.dCounty)
-    this.paypalScript()
   },
-  async mounted () {
-
+  mounted () {
+    this.paypalScript()
   },
   methods: {
     paypalScript () {
@@ -144,7 +172,16 @@ export default {
         })
     },
     getDistance () {
-
+      const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${this.origin}&destinations=${this.destination}&key=${API_KEY}`
+      axios.get(url)
+        .then(response => {
+          this.distance = response.data.rows[0].elements[0].distance
+          console.log(this.distance)
+          this.distanceloaded = true
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
     setLoaded () {
       this.loaded = true
@@ -169,24 +206,32 @@ export default {
       this.submit()
     },
     submit () {
-      if (this.$refs.DeliveryAddressForm.validate()) {
-        var item = {
-          status: this.status,
-          dLine1: this.dLine1,
-          dLine2: this.dLine2,
-          dTown: this.dTown,
-          dCounty: this.dCounty,
-          dEircode: this.dEircode,
-          dGeometry: this.dGeometry,
-          buyerID: this.buyerID,
-          dlat: this.dlat,
-          dlng: this.dlng,
-          datetime: this.datetime
+      if (this.option === 'delivery') {
+        if (this.$refs.DeliveryAddressForm.validate()) {
+          var item = {
+            status: 'To Delivery',
+            dLine1: this.dLine1,
+            dLine2: this.dLine2,
+            dTown: this.dTown,
+            dCounty: this.dCounty,
+            dEircode: this.dEircode,
+            dGeometry: this.dGeometry,
+            buyerID: this.buyerID,
+            dlat: this.dlat,
+            dlng: this.dlng,
+            datetime: this.datetime
+          }
+          this.item = item
         }
-        this.item = item
-        this.updateItem(this.itemid, this.item)
-        console.log(item)
+      } else {
+        var item2 = {
+          status: 'Purchased',
+          buyerID: this.buyerID
+        }
+        this.item = item2
       }
+      this.updateItem(this.itemid, this.item)
+      console.log(item)
     },
     updateItem: (itemid, item) => {
       ItemService.updateItem(itemid, item)
@@ -210,6 +255,18 @@ export default {
     },
     destination: function () {
       return this.dLine1 + ',' + this.dLine2 + ',' + this.dCounty
+    },
+    calcDistAmount: function () {
+      var total = 0
+      var amount = (this.distance.value / 1000) * 0.85
+      if (this.item.size === 'Large') {
+        total = amount + 15
+      } else if (this.item.size === 'Medium') {
+        total = amount + 10
+      } else {
+        total = amount + 5
+      }
+      return Math.ceil(total)
     }
   }
 }

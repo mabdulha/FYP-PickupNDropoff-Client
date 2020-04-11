@@ -142,7 +142,7 @@ export default {
       },
       dialog: false,
       option: null,
-      status: 'available',
+      status: 'Available',
       title: '',
       description: '',
       imageurl: '',
