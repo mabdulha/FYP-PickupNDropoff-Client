@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <v-layout row wrap>
-      <v-flex xs12>
+<v-container grid-list-xs>
+  <v-layout row wrap>
+      <v-flex xs8>
         <v-card elevation-2>
           <v-img
           max-height="500px"
@@ -26,17 +26,25 @@
           </v-card-actions>
         </v-card>
       </v-flex>
+      <v-flex class="pl-1" xs4>
+        <v-card elevation-2>
+          <v-card-title primary-title>
+            {{ user.fname }}
+          </v-card-title>
+        </v-card>
+      </v-flex>
     </v-layout>
     <v-layout v-if="loadpurchase == true" row wrap>
       <v-flex>
         <purchaseitem :item="item" :itemid="this.item._id" />
       </v-flex>
     </v-layout>
-  </v-container>
+</v-container>
 </template>
 
 <script>
 import ItemService from '../services/itemservice'
+import UserService from '../services/userservice'
 import purchaseitem from '@/components/PurchaseItem.vue'
 
 export default {
@@ -45,11 +53,12 @@ export default {
   },
   data () {
     return {
-      item: [],
+      item: {},
+      user: {},
       loadpurchase: false
     }
   },
-  mounted () {
+  created () {
     this.loadItem()
   },
   methods: {
@@ -60,9 +69,19 @@ export default {
           console.log(id)
           this.item = response.data
           console.log(this.item)
+          this.loadUser(this.item.userID)
         })
         .catch(error => {
           console.log(error)
+        })
+    },
+    loadUser: function (id) {
+      UserService.fetchUser(id)
+        .then(response => {
+          this.user = response.data
+        })
+        .catch(err => {
+          console.log(err)
         })
     },
     onPurchase () {

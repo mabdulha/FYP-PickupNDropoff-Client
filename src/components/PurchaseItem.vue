@@ -78,7 +78,7 @@
       </v-form>
     </div>
     <v-container fluid>
-      <div align="center" class="pt-4" ref="paypal" />
+      <div class="pt-2" ref="paypal" />
     </v-container>
   </v-container>
 </template>
@@ -165,7 +165,6 @@ export default {
           console.log(this.dlat)
           console.log(this.dlng)
           this.getDistance()
-          // this.submit()
         })
         .catch(err => {
           console.log(err)
@@ -185,8 +184,13 @@ export default {
     },
     setLoaded () {
       this.loaded = true
+      var ref = this
       window.paypal
         .Buttons({
+          style: {
+            label: 'checkout',
+            shape: 'pill'
+          },
           createOrder: (data, actions) => {
             return actions.order.create({
               purchase_units: [
@@ -200,16 +204,18 @@ export default {
                 }
               ]
             })
+          },
+          onApprove: function () {
+            ref.submit()
           }
         })
         .render(this.$refs.paypal)
-      this.submit()
     },
     submit () {
       if (this.option === 'delivery') {
         if (this.$refs.DeliveryAddressForm.validate()) {
           var item = {
-            status: 'To Delivery',
+            status: 'To Deliver',
             dLine1: this.dLine1,
             dLine2: this.dLine2,
             dTown: this.dTown,
