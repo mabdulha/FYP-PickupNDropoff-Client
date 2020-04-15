@@ -174,6 +174,9 @@ export default {
       alng: null
     }
   },
+  created () {
+    this.getCounties()
+  },
   methods: {
     onFilePick () {
       this.$refs.fileinput.click()
@@ -235,6 +238,10 @@ export default {
     submit () {
       if (this.$refs.RegisterDriverForm.validate()) {
         if (this.password === this.cpassword) {
+          if (this.avatar === '') {
+            this.avatar =
+              'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/avatars%2Fdefault-icon.png?alt=media&token=ea489f7f-3530-40ce-98ec-d45f10f5d83d'
+          }
           var driver = {
             fname: this.fname,
             lname: this.lname,

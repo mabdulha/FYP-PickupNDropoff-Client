@@ -48,7 +48,7 @@
           v-model="dEircode"
           :rules="[inputcheck('eircode')]"
         />
-        <v-btn color="primary" @click="getLatlng">Calculate Charge</v-btn>
+        <v-btn color="primary" @click="getLatlng">Calculate Estimated Charge</v-btn>
         <v-layout column>
           <v-simple-table class="pt-5" v-if="distanceloaded == true" height="200px">
           <template v-slot:default>

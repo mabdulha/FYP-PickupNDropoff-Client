@@ -28,9 +28,20 @@
       </v-flex>
       <v-flex class="pl-1" xs4>
         <v-card elevation-2>
-          <v-card-title primary-title>
-            {{ user.fname }}
+          <v-card-title subtitle>
+            Seller
           </v-card-title>
+          <v-card-text>
+            <v-layout row wrap>
+            <v-list-item-avatar size="64">
+              <img :src="user.avatar" alt="avatar">
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title class="text--primary" v-html="fullname" />
+              <v-list-item-subtitle v-html="location" />
+            </v-list-item-content>
+            </v-layout>
+          </v-card-text>
         </v-card>
       </v-flex>
     </v-layout>
@@ -86,6 +97,14 @@ export default {
     },
     onPurchase () {
       this.loadpurchase = true
+    }
+  },
+  computed: {
+    fullname: function () {
+      return this.user.fname + ' ' + this.user.lname
+    },
+    location: function () {
+      return this.user.aTown + ' - Co.' + this.user.aCounty
     }
   }
 }

@@ -12,9 +12,6 @@
             <v-btn class="primary" @click="onFilePick">
                   Upload Image
                 </v-btn>
-                <span>
-                  (optional)
-                </span>
                 <input type="file"
                         @change="onUploadImage"
                         style="display:none"
@@ -33,9 +30,10 @@
               v-model="title"
               :rules="[inputcheck('Title'), minlen('Title', 3)]"
             />
-            <v-text-field
+            <v-textarea
               outlined
               label="Description"
+              rows="3"
               v-model="description"
               :rules="[inputcheck('Description'), minlen('Description', 3)]"
             />
@@ -159,7 +157,7 @@ export default {
       counties: [],
       towns: [],
       categories: ['Clothing', 'Electonics', 'Furniture', 'Health', 'Music', 'Parts', 'Outdoor', 'Other'],
-      sizes: ['Small', 'Medium', 'Large'],
+      sizes: ['Small (Fit on a motorbike)', 'Medium (Fit into a car)', 'Large (Fit into a van)'],
       plat: null,
       plng: null
     }
