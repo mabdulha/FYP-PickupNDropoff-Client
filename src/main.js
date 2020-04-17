@@ -10,7 +10,11 @@ import 'sweetalert2/dist/sweetalert2.min.css'
 import VueFuse from 'vue-fuse'
 import Vue2Filters from 'vue2-filters'
 import DatetimePicker from 'vuetify-datetime-picker'
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
+Vue.use(BootstrapVue)
 Vue.use(DatetimePicker)
 Vue.use(Vue2Filters)
 Vue.use(VueFuse)

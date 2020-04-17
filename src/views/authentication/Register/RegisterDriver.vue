@@ -50,8 +50,8 @@
           outlined
           :items="sizes"
           v-model="size"
-          label="Vehicle Size"
-          :rules="[inputcheck('vehicle size')]"
+          label="Vehicle Type"
+          :rules="[inputcheck('vehicle type')]"
           @change="getCounties"
         ></v-select>
         <v-text-field
