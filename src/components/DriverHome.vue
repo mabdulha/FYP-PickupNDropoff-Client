@@ -15,6 +15,8 @@ import DriverService from '../services/driverservice'
 import ItemService from '../services/itemservice'
 import Vue from 'vue'
 import VueTables from 'vue-tables-2'
+import moment from 'moment'
+window.moment = moment
 
 Vue.use(VueTables.ClientTable, { compileTemplates: true, filterByColumn: false })
 export default {
@@ -27,27 +29,35 @@ export default {
       props: ['_id'],
       options: {
         perPage: 10,
+        dateColumns: ['datetime'],
+        templates: {
+          datetime: function (datetime) {
+            console.log(datetime)
+            return moment(datetime).format('DD-MM-YYYY HH:mm')
+          }
+        },
         headings: {
           title: 'Item',
           size: 'Size',
           pEircode: 'Pickup Address',
           dEircode: 'Dropoff Address',
           datetime: 'Date and Time',
+          estCharge: 'Recommended Charge',
           accept: 'Accept'
         },
         uniqueKey: '_id'
       },
-      columns: ['title', 'size', 'datetime', 'charge', 'accept']
+      columns: ['title', 'size', 'datetime', 'estCharge', 'accept']
     }
   },
   mounted () {
     this.getDrivers(this.driverID)
-    this.getItems(this.$store.state.driver.preferredTowns)
+    this.getItems(this.driver.preferredTowns)
   },
-  // updated () {
-  //   this.getItems(this.driver.preferredTowns)
-  //   console.log(this.driver.preferredTowns)
-  // },
+  updated () {
+    this.getItems(this.driver.preferredTowns)
+    console.log(this.driver.preferredTowns)
+  },
   methods: {
     getDrivers (id) {
       DriverService.fetchDriver(id)
@@ -73,11 +83,12 @@ export default {
     submit (id) {
       var item = {
         status: 'In Transit',
-        driverID: this.driverID
+        driverID: this.$store.state.driver._id
       }
       this.item = item
       this.updateItem(id, item)
       console.log(item)
+      console.log(this.$store.state.driver._id)
     },
     updateItem: function (id, item) {
       console.log(id)
