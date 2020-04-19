@@ -90,11 +90,14 @@
           v-model="aEircode"
           :rules="[inputcheck('eircode')]"
         />
-        <v-text-field
+        <v-select
           outlined
+          :items="alltowns"
           label="Preferred Towns"
-          type="text"
           v-model="preferredTowns"
+          multiple
+          chips
+          item-text="town"
           :rules="[inputcheck('preferred towns')]"
         />
       </v-form>
@@ -134,11 +137,11 @@ export default {
   data () {
     return {
       inputcheck (propertyType) {
-        return v => v.trim().length > 0 || `You must provide a ${propertyType}`
+        return v => v.length > 0 || `You must provide a ${propertyType}`
       },
       minlen (propertyType, minlen) {
         return v =>
-          v.trim().length >= minlen ||
+          v.length >= minlen ||
           `${propertyType} must be atleast ${minlen} characters long`
       },
       emailcheck (propertyType) {
@@ -161,7 +164,7 @@ export default {
       aTown: '',
       aCounty: '',
       aEircode: '',
-      preferredTowns: '',
+      preferredTowns: [],
       value: true,
       valuex: true,
       error: null,
@@ -169,6 +172,7 @@ export default {
       sizes: ['Car', 'Caravan', 'Motorbike', 'Pickup', 'Van'],
       counties: [],
       towns: [],
+      alltowns: [],
       aGeometry: [],
       alat: null,
       alng: null
@@ -176,6 +180,7 @@ export default {
   },
   created () {
     this.getCounties()
+    this.getAllTowns()
   },
   methods: {
     onFilePick () {
@@ -233,6 +238,13 @@ export default {
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    getAllTowns () {
+      TownService.fetchAllTowns()
+        .then(res => {
+          this.alltowns = res.data
+          console.log(this.alltowns)
         })
     },
     submit () {

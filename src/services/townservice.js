@@ -6,5 +6,8 @@ export default {
   },
   fetchTowns (county) {
     return Api().get(`/api/${county}/towns`)
+  },
+  fetchAllTowns () {
+    return Api().get('/api/towns/all')
   }
 }
