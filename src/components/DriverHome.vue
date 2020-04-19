@@ -30,12 +30,6 @@ export default {
       options: {
         perPage: 10,
         dateColumns: ['datetime'],
-        templates: {
-          datetime: function (datetime) {
-            console.log(datetime)
-            return moment(datetime).format('DD-MM-YYYY HH:mm')
-          }
-        },
         headings: {
           title: 'Item',
           size: 'Size',

@@ -225,7 +225,8 @@ export default {
             buyerID: this.buyerID,
             dlat: this.dlat,
             dlng: this.dlng,
-            datetime: this.datetime
+            datetime: this.datetime,
+            estCharge: this.calcDistAmount
           }
           this.item = item
         }

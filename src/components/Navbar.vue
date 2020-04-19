@@ -82,6 +82,12 @@ export default {
           { icon: 'mdi-bookmark', text: 'My Items', route: '/view/items/my' }
         ]
       }
+      if (this.$store.state.isDriverLoggedin) {
+        links = [
+          { icon: 'mdi-home', text: 'Home', route: '/' },
+          { icon: 'mdi-bookmark', text: 'My Jobs', route: '/view/driver/jobs' }
+        ]
+      }
       return links
     }
   }

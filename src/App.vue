@@ -22,3 +22,24 @@ export default {
   })
 }
 </script>
+
+<style>
+
+.VueTables__child-row-toggler {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
+.VueTables__child-row-toggler--closed::before {
+    content: "+";
+}
+
+.VueTables__child-row-toggler--open::before {
+    content: "-";
+}
+
+</style>
