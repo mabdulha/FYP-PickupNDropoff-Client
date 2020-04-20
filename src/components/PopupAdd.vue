@@ -16,6 +16,7 @@
                         @change="onUploadImage"
                         style="display:none"
                         accept="image/*"
+                        multiple
                         capture="environment"
                         ref="fileinput"
                         />
@@ -143,7 +144,7 @@ export default {
       status: 'Available',
       title: '',
       description: '',
-      imageurl: '',
+      imageurl: [],
       category: '',
       size: '',
       price: '',
@@ -170,22 +171,31 @@ export default {
       this.$refs.fileinput.click()
     },
     onUploadImage (e) {
-      let image = e.target.files[0]
-      let d = new Date()
-      var storageRef = fb.storage().ref('itemImages/' + d.getTime() + '-' + image.name)
-      let uploadTask = storageRef.put(image)
+      for (var i = 0; i < e.target.files.length; i++) {
+        let image = e.target.files[i]
 
-      uploadTask.on('state_changed', (snapshot) => {
-      // eslint-disable-next-line handle-callback-err
-      }, (error) => {
+        this.postImages(image)
+      }
+    },
+    postImages: function (images) {
+      var thisRef = this
+      return new Promise(function (resolve, reject) {
+        let d = new Date()
+        var storageRef = fb.storage().ref('itemImages/' + d.getTime() + '-' + images.name)
+        let uploadTask = storageRef.put(images)
+
+        uploadTask.on('state_changed', (snapshot) => {
+          // eslint-disable-next-line handle-callback-err
+        }, (error) => {
         // Handle unsuccessful uploads
-        console.log(error)
-      }, () => {
+          console.log(error)
+        }, () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log('File available at', downloadURL)
-          this.imageurl = downloadURL.toString()
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            console.log('File available at', downloadURL)
+            thisRef.imageurl.push(downloadURL.toString())
+          })
         })
       })
     },
