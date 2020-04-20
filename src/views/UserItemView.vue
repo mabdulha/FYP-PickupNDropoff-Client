@@ -5,7 +5,7 @@
         <v-container fluid>
         <v-card class="ma-5" shaped>
           <v-img
-            height="221px"
+            height="210px"
             contain
             :src="item.imageurl"
           >
@@ -16,6 +16,7 @@
 
           <v-card-text class="text--primary">
             <div class="text-truncate"> {{ item.description }} </div>
+            <div :class="itemstatus(item.status)" color="primary"> {{ item.status }} </div>
           </v-card-text>
 
           <v-card-actions>
@@ -52,6 +53,23 @@ export default {
     this.loadItems(this.userID)
   },
   methods: {
+    itemstatus (status) {
+      var style = ''
+      if (status === 'Available') {
+        style = 'teal--text pt-2'
+      } else if (status === 'Purchased') {
+        style = 'blue--text pt-2'
+      } else if (status === 'To Deliver') {
+        style = 'orange--text pt-2'
+      } else if (status === 'In Transit') {
+        style = 'indigo--text pt-2'
+      } else if (status === 'Delivered') {
+        style = 'pink--text pt-2'
+      } else {
+        style = 'gray--text pt-2'
+      }
+      return style
+    },
     loadItems: function (userID) {
       console.log(userID)
       ItemService.fetchItemsByUser(userID)

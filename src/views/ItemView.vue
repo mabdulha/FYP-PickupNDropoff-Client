@@ -20,7 +20,7 @@
             {{ item.description }}
           </v-card-text>
           <v-card-actions>
-            <v-btn v-show="loadpurchase == false && this.$store.state.user._id != this.item.userID" tile outlined @click="onPurchase" color="primary">
+            <v-btn v-if=" this.$store.state.isUserLoggedIn" v-show="loadpurchase == false && this.$store.state.user._id != this.item.userID" tile outlined @click="onPurchase" color="primary">
               <v-icon left>mdi-credit-card-outline</v-icon> Purchase
             </v-btn>
           </v-card-actions>

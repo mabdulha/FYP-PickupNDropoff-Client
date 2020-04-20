@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-layout>
-      <v-flex offset-xs3 xs6>
+      <v-flex offset-xs2 xs8>
         <vue-fuse class="search-bar" placeholder="Search for items" event-name="results" :list="items"
           :keys="['title', 'category']">
         </vue-fuse>
@@ -12,7 +12,7 @@
         <v-flex xs12 sm8 md6 lg4 v-for="item in filteredResults" :key="item._id">
           <v-container fluid>
             <v-card class="ma-5" shaped>
-              <v-img height="221px" contain :src="item.imageurl">
+              <v-img height="210px" contain :src="item.imageurl">
                 <v-card-subtitle class="text-end"> <v-icon class="pr-1">mdi-eye</v-icon> {{ item.views }} </v-card-subtitle>
               </v-img>
               <v-card-title class="indigo--text align-end"> {{ item.title }}
@@ -99,4 +99,10 @@ export default {
 input:focus, textarea:focus, select:focus{
         outline: none
     }
+
+@media only screen and (max-width: 600px) {
+  .search-bar {
+    width: 100%;
+  }
+}
 </style>

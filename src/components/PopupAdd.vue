@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" max-width="800px">
     <template v-slot:activator="{ on }">
-      <v-btn v-on="on" color="primary">Add New Item</v-btn>
+      <v-btn v-on="on" color="primary">Add Item</v-btn>
     </template>
     <v-card>
       <v-card-title primary-title>
@@ -218,7 +218,7 @@ export default {
     submit () {
       if (this.$refs.AddItemForm.validate()) {
         if (this.imageurl === '') {
-          this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Funavailable-image.jpg?alt=media&token=798dc11b-c68d-4bb7-9fcb-198eb49727f0'
+          this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Fimage-unavailable.png?alt=media&token=13cdd462-18d3-45d7-9948-6dd0278d04f9'
         }
         if (this.option === 'yes') {
           var item = {
