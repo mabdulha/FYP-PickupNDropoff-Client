@@ -280,7 +280,7 @@ export default {
         .then(response => {
           console.log(response)
           console.log(item)
-          window.location.reload()
+          // window.location.reload()
         })
         .catch(err => {
           console.log(err)

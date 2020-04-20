@@ -3,12 +3,21 @@
   <v-layout row wrap>
       <v-flex xs8>
         <v-card elevation-2>
-          <v-img
+          <!-- <v-img
           max-height="500px"
           contain
           :src="item.imageurl"
           >
-          </v-img>
+          </v-img> -->
+          <v-carousel>
+            <v-carousel-item
+              v-for="(image, i) in item.imageurl"
+              :key="i"
+              :src="image"
+              treverse-transition="fade-transition"
+              transition="fade-transition"
+            ></v-carousel-item>
+          </v-carousel>
           <v-card-title>
             <h4 class="primary--text"> {{ item.title }} </h4>
             <v-spacer></v-spacer>
