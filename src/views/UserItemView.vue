@@ -4,11 +4,7 @@
       <v-flex xs12 sm8 md6 lg4 v-for="item in items" :key="item._id">
         <v-container fluid>
         <v-card class="ma-5" shaped>
-          <v-img
-            height="210px"
-            contain
-            :src="item.imageurl"
-          >
+          <v-img height="210px" contain :src="item.imageurl[0]">
           <v-card-subtitle class="text-end"> <v-icon class="pr-1">mdi-eye</v-icon> {{ item.views }} </v-card-subtitle>
           </v-img>
           <v-card-title class="indigo--text align-end"> {{ item.title }} <v-spacer /> {{ item.price | currency('€') }} </v-card-title>

@@ -1,7 +1,7 @@
 <template>
 <v-container grid-list-xs>
   <v-layout row wrap>
-      <v-flex xs8>
+      <v-flex xs12 lg8>
         <v-card elevation-2>
           <!-- <v-img
           max-height="500px"
@@ -14,8 +14,7 @@
               v-for="(image, i) in item.imageurl"
               :key="i"
               :src="image"
-              treverse-transition="fade-transition"
-              transition="fade-transition"
+              contain
             ></v-carousel-item>
           </v-carousel>
           <v-card-title>
@@ -29,13 +28,13 @@
             {{ item.description }}
           </v-card-text>
           <v-card-actions>
-            <v-btn v-if=" this.$store.state.isUserLoggedIn" v-show="loadpurchase == false && this.$store.state.user._id != this.item.userID" tile outlined @click="onPurchase" color="primary">
+            <v-btn v-if=" this.$store.state.isUserLoggedin" v-show="loadpurchase == false && this.$store.state.user._id != this.item.userID" tile outlined @click="onPurchase" color="primary">
               <v-icon left>mdi-credit-card-outline</v-icon> Purchase
             </v-btn>
           </v-card-actions>
         </v-card>
       </v-flex>
-      <v-flex class="pl-1" xs4>
+      <v-flex class="pl-1" xs12 lg4>
         <v-card elevation-2>
           <v-card-title subtitle>
             Seller

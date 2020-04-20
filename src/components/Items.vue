@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-layout>
-      <v-flex offset-xs2 xs8>
+      <v-flex offset-xs2 offset-md3 xs8 md6>
         <vue-fuse class="search-bar" placeholder="Search for items" event-name="results" :list="items"
           :keys="['title', 'category']">
         </vue-fuse>

@@ -55,7 +55,7 @@
             <thead>
               <tr>
                 <th class="subtitle-1 text-left">Distance</th>
-                <th class="subtitle-1 text-right">Item Size</th>
+                <th class="subtitle-1 text-center">Item Size</th>
                 <th class="subtitle-1 text-center">Estimated Delivery Charge</th>
               </tr>
             </thead>
@@ -64,7 +64,7 @@
                 <td class="text-left">
                   {{ distance.text }}
                 </td>
-                <td class="text-right">
+                <td class="text-center">
                   {{ item.size }}
                 </td>
                 <td class="text-center">
