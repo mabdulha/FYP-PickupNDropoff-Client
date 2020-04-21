@@ -1,7 +1,7 @@
 <template>
   <div id="app1">
     <v-client-table :data="items" :columns="columns" :options="options">
-      <a slot="accept" slot-scope="props" class="fa fa-check-circle fa-2x" @click="submit(props.row._id)"></a>
+      <a slot="accept" slot-scope="props" class="fa fa-check-circle fa-2x" @click="submit(props.row._id, props.row.itemID)"></a>
       <div slot-scope="props" slot="child_row">
         <iframe :src="map(props.row.pEircode, props.row.dEircode)" frameborder="0" width="100%" height="500px" allowfullscreen></iframe>
       </div>
@@ -75,14 +75,14 @@ export default {
           console.log(err)
         })
     },
-    submit (id) {
+    submit (id, itemID) {
       console.log(id)
       var delivery = {
         driverID: this.$store.state.driver._id
       }
       this.delivery = delivery
       console.log(this.delivery)
-      this.updateDelivery(id, this.delivery)
+      this.updateDelivery(id, this.delivery, itemID)
     },
     map (dEircode, pEircode) {
       navigator.geolocation.getCurrentPosition(
@@ -103,15 +103,15 @@ export default {
       }
       return url
     },
-    updateDelivery: function (id, delivery) {
+    updateDelivery: function (id, delivery, itemID) {
       DeliveryService.updateDelivery(id, delivery)
         .then(response => {
           console.log(response)
-          var item2 = {
+          var item = {
             status: 'In Transit'
           }
-          this.item2 = item2
-          this.updateItem(this.item.itemID, this.item2)
+          this.item = item
+          this.updateItem(itemID, this.item)
         }).catch(err => {
           console.log(err)
         })
