@@ -85,6 +85,7 @@
 
 <script>
 import ItemService from '../services/itemservice'
+import DeliverService from '../services/deliveryservice'
 import TownService from '../services/townservice'
 import axios from 'axios'
 import moment from 'moment'
@@ -95,7 +96,7 @@ dotenv.config()
 var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
 
 export default {
-  props: ['item', 'itemid'],
+  props: ['user', 'userName', 'item', 'itemid'],
   data () {
     return {
       inputcheck (propertyType) {
@@ -107,6 +108,7 @@ export default {
           `${propertyType} must be atleast ${minlen} characters long`
       },
       loaded: false,
+      item2: {},
       distanceloaded: false,
       option: null,
       option2: null,
@@ -118,6 +120,8 @@ export default {
       dCounty: this.$store.state.user.aCounty,
       dEircode: this.$store.state.user.aEircode,
       buyerID: this.$store.state.user._id,
+      fname: this.$store.state.user.fname,
+      lname: this.$store.state.user.lname,
       dGeometry: [],
       dlat: null,
       dlng: null,
@@ -215,31 +219,53 @@ export default {
     submit () {
       if (this.option === 'delivery') {
         if (this.$refs.DeliveryAddressForm.validate()) {
-          var item = {
-            status: 'To Deliver',
+          var deliveryJob = {
+            size: this.item.size,
+            pLine1: this.item.pLine1,
+            pLine2: this.item.pLine2,
+            pCounty: this.item.pCounty,
+            pTown: this.item.pTown,
+            pEircode: this.item.pEircode,
             dLine1: this.dLine1,
             dLine2: this.dLine2,
             dTown: this.dTown,
             dCounty: this.dCounty,
             dEircode: this.dEircode,
-            dGeometry: this.dGeometry,
-            buyerID: this.buyerID,
-            dlat: this.dlat,
-            dlng: this.dlng,
-            datetime: this.datetimeFormat,
+            buyerName: this.$store.state.user.fname + ' ' + this.$store.state.user.lname,
+            buyerNumber: this.$store.state.user.phone,
+            sellerName: this.userName,
+            sellerNumber: this.user.phone,
+            ddatetime: this.datetimeFormat,
             estCharge: this.calcDistAmount
           }
-          this.item = item
+          this.deliveryJob = deliveryJob
+          console.log('submit ' + this.deliveryJob)
+          this.addDelivery(this.deliveryJob)
         }
       } else {
-        var item2 = {
+        var item = {
           status: 'Purchased',
           buyerID: this.buyerID
         }
-        this.item = item2
+        this.item2 = item
+        this.updateItem(this.itemid, this.item2)
       }
-      this.updateItem(this.itemid, this.item)
-      console.log(item)
+    },
+    addDelivery (delivery) {
+      console.log('addDelivery ' + delivery)
+      DeliverService.addDelivery(delivery)
+        .then(response => {
+          this.delivery = response
+          console.log(response)
+          var item = {
+            status: 'To Deliver',
+            buyerID: this.buyerID
+          }
+          this.item2 = item
+          this.updateItem(this.itemid, this.item2)
+        }).catch(err => {
+          console.log(err)
+        })
     },
     updateItem: (itemid, item) => {
       ItemService.updateItem(itemid, item)
@@ -258,6 +284,9 @@ export default {
     }
   },
   computed: {
+    buyername: function () {
+      return this.fname + ' ' + this.lname
+    },
     origin: function () {
       return this.item.pLine1 + ',' + this.item.pLine2 + ',' + this.item.pCounty
     },

@@ -55,7 +55,7 @@
     </v-layout>
     <v-layout v-if="loadpurchase == true" row wrap>
       <v-flex>
-        <purchaseitem :item="item" :itemid="this.item._id" />
+        <purchaseitem :user="user" :userName="fullname" :item="item" :itemid="this.item._id" />
       </v-flex>
     </v-layout>
 </v-container>
