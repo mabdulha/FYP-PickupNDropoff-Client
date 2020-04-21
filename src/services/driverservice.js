@@ -5,7 +5,7 @@ export default {
     return Api().get(`/api/driver/${id}`)
   },
   fetchItemsForDeliver (town) {
-    return Api().get(`/api/items/find/${town}/fordelivery`)
+    return Api().get(`/api/deliveries/find/${town}`)
   },
   fetchDriverJobs (id) {
     return Api().get(`/api/driver/${id}/deliveries`)

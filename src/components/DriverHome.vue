@@ -11,6 +11,7 @@
 
 <script>
 import DriverService from '../services/driverservice'
+import DeliveryService from '../services/deliveryservice'
 import ItemService from '../services/itemservice'
 import Vue from 'vue'
 import VueTables from 'vue-tables-2'
@@ -33,25 +34,16 @@ export default {
       props: ['_id'],
       options: {
         perPage: 10,
-        dateColumns: ['datetime'],
-        dateFormat: 'DD/MM/YYYY HH:mm',
-        templates: {
-          estCharge: function (columns) {
-            return columns.estCharge
-          }
-        },
         headings: {
           title: 'Item',
           size: 'Size',
-          pEircode: 'Pickup Address',
-          dEircode: 'Dropoff Address',
-          datetime: 'Date and Time',
+          ddatetime: 'Date and Time',
           estCharge: 'Recommended Charge',
           accept: 'Accept'
         },
         uniqueKey: '_id'
       },
-      columns: ['title', 'size', 'datetime', 'estCharge', 'accept']
+      columns: ['title', 'size', 'ddatetime', 'estCharge', 'accept']
     }
   },
   mounted () {
@@ -84,14 +76,13 @@ export default {
         })
     },
     submit (id) {
-      var item = {
-        status: 'In Transit',
+      console.log(id)
+      var delivery = {
         driverID: this.$store.state.driver._id
       }
-      this.item = item
-      this.updateItem(id, item)
-      console.log(item)
-      console.log(this.$store.state.driver._id)
+      this.delivery = delivery
+      console.log(this.delivery)
+      this.updateDelivery(id, this.delivery)
     },
     map (dEircode, pEircode) {
       navigator.geolocation.getCurrentPosition(
@@ -112,11 +103,27 @@ export default {
       }
       return url
     },
+    updateDelivery: function (id, delivery) {
+      DeliveryService.updateDelivery(id, delivery)
+        .then(response => {
+          console.log(response)
+          var item2 = {
+            status: 'In Transit'
+          }
+          this.item2 = item2
+          this.updateItem(this.item.itemID, this.item2)
+        }).catch(err => {
+          console.log(err)
+        })
+    },
     updateItem: function (id, item) {
       console.log(id)
+      console.log(item)
       ItemService.updateItem(id, item)
         .then(response => {
           console.log(response)
+        }).catch(err => {
+          console.log(err)
         })
     }
   },

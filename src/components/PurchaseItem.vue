@@ -220,6 +220,7 @@ export default {
       if (this.option === 'delivery') {
         if (this.$refs.DeliveryAddressForm.validate()) {
           var deliveryJob = {
+            title: this.item.title,
             size: this.item.size,
             pLine1: this.item.pLine1,
             pLine2: this.item.pLine2,
@@ -231,6 +232,7 @@ export default {
             dTown: this.dTown,
             dCounty: this.dCounty,
             dEircode: this.dEircode,
+            itemID: this.itemid,
             buyerName: this.$store.state.user.fname + ' ' + this.$store.state.user.lname,
             buyerNumber: this.$store.state.user.phone,
             sellerName: this.userName,
