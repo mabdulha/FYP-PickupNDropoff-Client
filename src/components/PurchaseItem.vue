@@ -87,6 +87,7 @@
 import ItemService from '../services/itemservice'
 import TownService from '../services/townservice'
 import axios from 'axios'
+import moment from 'moment'
 
 const dotenv = require('dotenv')
 dotenv.config()
@@ -225,7 +226,7 @@ export default {
             buyerID: this.buyerID,
             dlat: this.dlat,
             dlng: this.dlng,
-            datetime: this.datetime,
+            datetime: this.datetimeFormat,
             estCharge: this.calcDistAmount
           }
           this.item = item
@@ -266,14 +267,17 @@ export default {
     calcDistAmount: function () {
       var total = 0
       var amount = (this.distance.value / 1000) * 0.85
-      if (this.item.size === 'Large') {
+      if (this.item.size === 'Large (Fit into a van)') {
         total = amount + 15
-      } else if (this.item.size === 'Medium') {
+      } else if (this.item.size === 'Medium (Fit into a car)') {
         total = amount + 10
       } else {
         total = amount + 5
       }
       return Math.ceil(total)
+    },
+    datetimeFormat: function () {
+      return moment(this.datetime).format('DD-MM-YYYY HH:mm')
     }
   }
 }

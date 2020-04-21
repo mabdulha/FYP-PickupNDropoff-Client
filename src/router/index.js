@@ -9,7 +9,7 @@ import LoginDriver from '../views/authentication/login/LoginDriver.vue'
 import LoginUser from '../views/authentication/login/LoginUser.vue'
 import ItemView from '../views/ItemView.vue'
 import UserItemView from '../views/UserItemView'
-import DriversJobs from '../views/DriversJobs'
+import DriversJobs from '../views/Deliveries'
 
 Vue.use(VueRouter)
 

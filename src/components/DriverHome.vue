@@ -2,9 +2,8 @@
   <div id="app1">
     <v-client-table :data="items" :columns="columns" :options="options">
       <a slot="accept" slot-scope="props" class="fa fa-check-circle fa-2x" @click="submit(props.row._id)"></a>
-      <div slot="child_row" slot-scope="props">
-        <div> Pickup Address: {{ props.row.pLine1 + ', ' + props.row.pLine2 + ', ' + props.row.pTown + ', ' + props.row.pCounty + ', ' + props.row.pEircode }} </div>
-        <div> Dropoff Address: {{ props.row.dLine1 + ', ' + props.row.dLine2 + ', ' + props.row.dTown + ', ' + props.row.dCounty + ', ' + props.row.dEircode }} </div>
+      <div slot-scope="props" slot="child_row">
+        <iframe :src="map(props.row.pEircode, props.row.dEircode)" frameborder="0" width="100%" height="500px" allowfullscreen></iframe>
       </div>
     </v-client-table>
   </div>
@@ -19,6 +18,9 @@ import moment from 'moment'
 window.moment = moment
 
 Vue.use(VueTables.ClientTable, { compileTemplates: true, filterByColumn: false })
+
+var API_KEY = process.env.VUE_APP_GOOGLE_API_KEY
+
 export default {
   data () {
     return {
@@ -26,10 +28,18 @@ export default {
       driverID: this.$store.state.driver._id,
       items: [],
       item: {},
+      lat: 0,
+      lng: 0,
       props: ['_id'],
       options: {
         perPage: 10,
         dateColumns: ['datetime'],
+        dateFormat: 'DD/MM/YYYY HH:mm',
+        templates: {
+          estCharge: function (columns) {
+            return columns.estCharge
+          }
+        },
         headings: {
           title: 'Item',
           size: 'Size',
@@ -46,11 +56,10 @@ export default {
   },
   mounted () {
     this.getDrivers(this.driverID)
-    this.getItems(this.driver.preferredTowns)
+    this.getItems(this.$store.state.driver.preferredTowns)
   },
   updated () {
-    this.getItems(this.driver.preferredTowns)
-    console.log(this.driver.preferredTowns)
+    // this.getItems(this.driver.preferredTowns)
   },
   methods: {
     getDrivers (id) {
@@ -83,6 +92,25 @@ export default {
       this.updateItem(id, item)
       console.log(item)
       console.log(this.$store.state.driver._id)
+    },
+    map (dEircode, pEircode) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          this.lat = position.coords.latitude
+          this.lng = position.coords.longitude
+        },
+        error => {
+          console.log('Could not get position ' + error)
+        }, { enableHighAccuracy: true })
+
+      let url = ''
+
+      if (this.lat === 0 && this.lng === 0) {
+        url = `https://www.google.com/maps/embed/v1/directions?origin=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+      } else {
+        url = `https://www.google.com/maps/embed/v1/directions?origin=${this.lat + ',' + this.lng}&waypoints=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+      }
+      return url
     },
     updateItem: function (id, item) {
       console.log(id)

@@ -21,11 +21,12 @@
                         ref="fileinput"
                         />
                 <v-layout row>
-                  <v-flex xs12 sm6 offset-xs1>
-                    <img :src="imageurl" height="200">
+                  <v-flex xs12 sm9 offset-xs1>
+                    <img class="pt-3 edit-image" v-for="(image, i) in imageurl" :key="i" :src="imageurl[i]">
                   </v-flex>
                 </v-layout>
             <v-text-field
+            class="pt-3"
               outlined
               label="Title"
               v-model="title"
@@ -35,6 +36,7 @@
               outlined
               label="Description"
               rows="3"
+              counter
               v-model="description"
               :rules="[inputcheck('Description'), minlen('Description', 3)]"
             />
@@ -227,8 +229,8 @@ export default {
     },
     submit () {
       if (this.$refs.AddItemForm.validate()) {
-        if (this.imageurl === '') {
-          this.imageurl = 'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Fimage-unavailable.png?alt=media&token=13cdd462-18d3-45d7-9948-6dd0278d04f9'
+        if (this.imageurl.length === 0) {
+          this.imageurl.push('https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/itemImages%2Fimage-unavailable.png?alt=media&token=13cdd462-18d3-45d7-9948-6dd0278d04f9')
         }
         if (this.option === 'yes') {
           var item = {
@@ -280,7 +282,7 @@ export default {
         .then(response => {
           console.log(response)
           console.log(item)
-          // window.location.reload()
+          window.location.reload()
         })
         .catch(err => {
           console.log(err)
@@ -295,3 +297,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.edit-image {
+  display: inline-block;
+  width: 33%;
+}
+
+</style>

@@ -22,11 +22,12 @@
                         @change="onUploadImage"
                         style="display:none"
                         accept="image/*"
+                        multiple
                         ref="fileinput"
                         />
                 <v-layout row>
-                  <v-flex xs12 sm6 offset-xs1>
-                    <img class="pa-3" :src="editedImageurl" height="200">
+                  <v-flex xs12 sm9 offset-xs1>
+                    <img class="pa-3 edit-image" v-for="(image, i) in editedImageurl" :key="i" :src="editedImageurl[i]">
                   </v-flex>
                 </v-layout>
             <v-text-field
@@ -35,24 +36,28 @@
               v-model="editedTitle"
               :rules="[inputcheck('Title'), minlen('Title', 3)]"
             />
-            <v-text-field
+            <v-textarea
               outlined
               label="Description"
+              rows="3"
+              counter
               v-model="editedDescription"
               :rules="[inputcheck('Description'), minlen('Description', 3)]"
             />
-            <v-text-field
+            <v-select
               outlined
+              :items="editedCategory"
+              v-model="category"
               label="Category"
-              v-model="editedCategory"
-              :rules="[inputcheck('Category'), minlen('Category', 3)]"
-            />
-            <v-text-field
+              :rules="[inputcheck('Category')]"
+            ></v-select>
+            <v-select
               outlined
+              :items="editedSize"
+              v-model="size"
               label="Size"
-              v-model="editedSize"
               :rules="[inputcheck('Size')]"
-            />
+            ></v-select>
             <v-text-field
               outlined
               label="Price"
@@ -134,9 +139,9 @@ export default {
       childDataLoaded: false,
       editedTitle: this.item.title,
       editedDescription: this.item.description,
-      editedCategory: this.item.category,
       editedPrice: this.item.price,
-      editedSize: this.item.size,
+      category: this.item.category,
+      size: this.item.size,
       editedImageurl: this.item.imageurl,
       editedPLine1: this.item.pLine1,
       editedPLine2: this.item.pLine2,
@@ -146,8 +151,8 @@ export default {
       editedGeometry: this.item.pGeometry,
       editedLat: this.item.plat,
       editedLng: this.item.plng,
-      categories: ['Clothing', 'Electonics', 'Furniture', 'Health', 'Music', 'Parts', 'Outdoor', 'Other'],
-      sizes: ['Small', 'Medium', 'Large'],
+      editedCategory: ['Clothing', 'Electonics', 'Furniture', 'Health', 'Music', 'Parts', 'Outdoor', 'Other'],
+      editedSize: ['Small (Fit on a motorbike)', 'Medium (Fit into a car)', 'Large (Fit into a van)'],
       counties: [],
       towns: []
     }
@@ -161,22 +166,31 @@ export default {
       this.$refs.fileinput.click()
     },
     onUploadImage (e) {
-      let image = e.target.files[0]
-      let d = new Date()
-      var storageRef = fb.storage().ref('itemImages/' + d.getTime() + '-' + image.name)
-      let uploadTask = storageRef.put(image)
+      for (var i = 0; i < e.target.files.length; i++) {
+        let image = e.target.files[i]
 
-      uploadTask.on('state_changed', (snapshot) => {
-      // eslint-disable-next-line handle-callback-err
-      }, (error) => {
+        this.postImages(image)
+      }
+    },
+    postImages: function (images) {
+      var thisRef = this
+      return new Promise(function (resolve, reject) {
+        let d = new Date()
+        var storageRef = fb.storage().ref('itemImages/' + d.getTime() + '-' + images.name)
+        let uploadTask = storageRef.put(images)
+
+        uploadTask.on('state_changed', (snapshot) => {
+          // eslint-disable-next-line handle-callback-err
+        }, (error) => {
         // Handle unsuccessful uploads
-        console.log(error)
-      }, () => {
+          console.log(error)
+        }, () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log('File available at', downloadURL)
-          this.editedImageurl = downloadURL.toString()
+          uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+            console.log('File available at', downloadURL)
+            thisRef.editedImageurl.push(downloadURL.toString())
+          })
         })
       })
     },
@@ -212,8 +226,8 @@ export default {
           title: this.editedTitle,
           description: this.editedDescription,
           imageurl: this.editedImageurl,
-          category: this.editedCategory,
-          size: this.editedSize,
+          category: this.category,
+          size: this.size,
           price: this.editedPrice,
           userID: this.$store.state.user._id,
           pLine1: this.editedPLine1,
@@ -235,7 +249,7 @@ export default {
       ItemService.updateItem(itemId, item)
         .then(response => {
           console.log(response)
-          window.location.reload()
+          // window.location.reload()
         })
         .catch(err => {
           console.log(err)
@@ -250,3 +264,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.edit-image {
+  display: inline-block;
+  width: 33%;
+}
+
+</style>
