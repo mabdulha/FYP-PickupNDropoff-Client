@@ -32,7 +32,7 @@ deploy_staging:
     - develop
     - master
   stage: deploy
-  before_script:
-    - npm install -g now
   script:
+    - npm install -g now
     - now --token=$PND_TOKEN
+    - now alias pickup-n-dropoff.com
