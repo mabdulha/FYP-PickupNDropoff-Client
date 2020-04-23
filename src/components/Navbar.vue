@@ -20,7 +20,7 @@
       <router-link to="/" tag="header">
         <v-toolbar-title dark>
           <span class="font-weight-light">PickupN</span>
-          <span class="font-weight-bold">Dropoff</span>
+          <span class="font-weight-bold">Dropoff Test</span>
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>

@@ -33,6 +33,6 @@ deploy_staging:
     - master
   stage: deploy
   before_script:
-    npm install -g now
+    - npm install -g now
   script:
-    now deploy --token $PND_TOKEN
+    - now deploy --token $PND_TOKEN
