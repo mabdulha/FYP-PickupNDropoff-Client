@@ -36,3 +36,4 @@ deploy_staging:
     - npm install -g now
   script:
     - now deploy --token $PND_TOKEN
+    
