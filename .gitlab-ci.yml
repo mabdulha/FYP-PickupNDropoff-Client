@@ -27,3 +27,12 @@ bundle:
     paths:
      - dist/
 
+deploy_staging:
+  only:
+    - develop
+    - master
+  stage: deploy
+  before_script:
+    npm install -g now
+  script:
+    now deploy --token $PND_TOKEN
