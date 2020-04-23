@@ -1,7 +1,7 @@
 describe('Login Page', () => {
-  const username = 'Genarcik'
+  const username = 'mozza'
   const password = 'secret'
-  before(() => {
+  beforeEach(() => {
     cy.visit('/login/user')
   })
   it('check if page contains tabs', () => {
@@ -22,4 +22,8 @@ describe('Login Page', () => {
     cy.get('.login-btn')
       .click()
   })
+  // it('should log out the user', () => {
+  //   cy.get('.v-btn__content')
+  //     .should('contain', 'logout')
+  // })
 })
