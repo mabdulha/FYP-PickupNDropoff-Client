@@ -36,3 +36,4 @@ deploy_staging:
     - npm install -g now
     - now --token=$PND_TOKEN
     - now alias pickup-n-dropoff.com
+    - echo "Y"
