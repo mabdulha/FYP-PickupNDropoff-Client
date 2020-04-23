@@ -221,7 +221,6 @@ export default {
         if (this.$refs.DeliveryAddressForm.validate()) {
           var deliveryJob = {
             title: this.item.title,
-            status: 'Available',
             size: this.item.size,
             pLine1: this.item.pLine1,
             pLine2: this.item.pLine2,

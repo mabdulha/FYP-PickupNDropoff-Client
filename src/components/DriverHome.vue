@@ -51,7 +51,7 @@ export default {
     this.getItems(this.$store.state.driver.preferredTowns)
   },
   updated () {
-    this.getItems(this.driver.preferredTowns)
+    // this.getItems(this.driver.preferredTowns)
   },
   methods: {
     getDrivers (id) {
@@ -78,10 +78,10 @@ export default {
     submit (id, itemID) {
       console.log(id)
       var delivery = {
-        status: 'Taken',
         driverID: this.$store.state.driver._id
       }
       this.delivery = delivery
+      console.log(this.delivery)
       this.updateDelivery(id, this.delivery, itemID)
     },
     map (dEircode, pEircode) {

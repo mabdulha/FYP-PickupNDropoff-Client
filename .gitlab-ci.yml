@@ -27,12 +27,3 @@ bundle:
     paths:
      - dist/
 
-test:
-  image: cypress/base:10
-  stage: test
-  before_script:
-    - npm install -g httpserver
-    - npm install cypress
-    - npm run start:server
-  script:
-    - npx cypress run  --record --key=$CYPRESS_RECORD_KEY
