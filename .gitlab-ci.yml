@@ -35,5 +35,6 @@ deploy_staging:
   script:
     - npm install -g now
     - now --token=$PND_TOKEN
-    - now alias pickup-n-dropoff.com
-    - echo "Y"
+    - ./node_modules/.bin/now -e NODE_ENV=staging --regions sfo --scale 1 --token=$PND_TOKEN
+    - ./node_modules/.bin/now alias pickup-n-dropoff.com --token=MY TOKEN
+    
