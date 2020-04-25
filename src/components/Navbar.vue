@@ -19,8 +19,8 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <router-link to="/" tag="header">
         <v-toolbar-title dark>
-          <span class="font-weight-light">PickupN</span>
-          <span class="font-weight-bold">Dropoff CICD Deploy Test</span>
+          <span class="font-weight-light">Pickup</span>
+          <span class="font-weight-bold">NDropoff</span>
         </v-toolbar-title>
       </router-link>
       <v-spacer></v-spacer>
