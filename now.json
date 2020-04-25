@@ -1,0 +1,7 @@
+{
+  "name": "pnd-now",
+  "version": 1,
+  "env": {
+    "APP_ENV": "@dev_app_env"
+  }
+}
