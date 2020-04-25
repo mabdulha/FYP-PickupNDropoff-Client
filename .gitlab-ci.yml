@@ -29,13 +29,13 @@ bundle:
 deploy-staging:
   stage: deploy
   script:
-    - npm ci:deploy:staging
+    - npm run ci:deploy:staging
   only:
     - develop
 
 deploy-production:
   stage: deploy
   script:
-    - npm ci:deploy:prod
+    - npm run ci:deploy:prod
   only:
     - master
