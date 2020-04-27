@@ -14,7 +14,6 @@
               v-for="(image, i) in item.imageurl"
               :key="i"
               :src="image"
-              contain
             ></v-carousel-item>
           </v-carousel>
           <v-card-title>

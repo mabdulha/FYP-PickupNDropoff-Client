@@ -78,6 +78,7 @@ export default {
     submit (id, itemID) {
       console.log(id)
       var delivery = {
+        status: 'Accepted',
         driverID: this.$store.state.driver._id
       }
       this.delivery = delivery

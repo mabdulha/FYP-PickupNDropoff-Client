@@ -203,8 +203,8 @@ export default {
                   name: this.item.title,
                   description: this.item.description,
                   amount: {
-                    currency_code: 'EUR',
-                    value: this.item.price
+                    currency: 'EUR',
+                    value: this.item.price + this.calcDistAmount
                   }
                 }
               ]
@@ -298,13 +298,17 @@ export default {
     },
     calcDistAmount: function () {
       var total = 0
-      var amount = (this.distance.value / 1000) * 0.85
-      if (this.item.size === 'Large (Fit into a van)') {
-        total = amount + 15
-      } else if (this.item.size === 'Medium (Fit into a car)') {
-        total = amount + 10
+      if (this.option === 'delivery') {
+        var amount = (this.distance.value / 1000) * 0.40
+        if (this.item.size === 'Large (Fit into a van)') {
+          total = amount + 15
+        } else if (this.item.size === 'Medium (Fit into a car)') {
+          total = amount + 10
+        } else {
+          total = amount + 5
+        }
       } else {
-        total = amount + 5
+        total = 0
       }
       return Math.ceil(total)
     },

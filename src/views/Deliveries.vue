@@ -1,8 +1,9 @@
 <template>
   <div id="app1">
     <v-client-table :data="items" :columns="columns" :options="options">
+      <a slot="delivered" slot-scope="props" class="fa fa-check-circle fa-2x" @click="submit(props.row._id, props.row.itemID)"></a>
       <div slot-scope="props" slot="child_row">
-        <iframe :src="submit(props.row.pEircode, props.row.dEircode)" frameborder="0" width="100%" height="500px" allowfullscreen></iframe>
+        <iframe :src="map(props.row.pEircode, props.row.dEircode)" frameborder="0" width="100%" height="500px" allowfullscreen></iframe>
       </div>
     </v-client-table>
   </div>
@@ -23,13 +24,26 @@ export default {
   data () {
     return {
       items: [],
+      lat: 0,
+      lng: 0,
       driverID: this.$store.state.driver._id,
       props: ['_id'],
-      columns: ['size', 'estCharge', 'datetime'],
+      columns: ['title', 'size', 'sellerName', 'sellerNumber', 'buyerName', 'buyerNumber', 'ddatetime', 'estCharge', 'delivered'],
       options: {
         perPage: 10,
         uniqueKey: '_id',
-        dateColumns: ['datetime']
+        dateColumns: ['datetime'],
+        headings: {
+          title: 'Item',
+          size: 'Size',
+          sellerName: 'Seller Name',
+          sellerNumber: 'Seller Number',
+          buyerName: 'Buyer Name',
+          buyerNumber: 'Buyer Number',
+          ddatetime: 'Delivery Date and Time',
+          estCharge: 'Recommended Charge (€)',
+          delivered: 'Delivered'
+        }
       }
     }
   },
@@ -47,9 +61,26 @@ export default {
           console.log(err)
         })
     },
-    submit (dEircode, pEircode) {
-      console.log(dEircode, pEircode)
-      let url = `https://www.google.com/maps/embed/v1/directions?origin=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+    submit (id, itemID) {
+      console.log(id, itemID)
+    },
+    map (dEircode, pEircode) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          this.lat = position.coords.latitude
+          this.lng = position.coords.longitude
+        },
+        error => {
+          console.log('Could not get position ' + error)
+        }, { enableHighAccuracy: true })
+
+      let url = ''
+
+      if (this.lat === 0 && this.lng === 0) {
+        url = `https://www.google.com/maps/embed/v1/directions?origin=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+      } else {
+        url = `https://www.google.com/maps/embed/v1/directions?origin=${this.lat + ',' + this.lng}&waypoints=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+      }
       return url
     }
   }
