@@ -92,7 +92,15 @@
         />
         <v-select
           outlined
-          :items="alltowns"
+          :items="counties"
+          v-model="pCounty"
+          label="County"
+          @change="getTowns(pCounty)"
+          :rules="[inputcheck('county')]"
+        />
+        <v-select
+          outlined
+          :items="towns"
           label="Preferred Towns"
           v-model="preferredTowns"
           multiple
@@ -106,14 +114,14 @@
         <input
           type="file"
           @change="onUploadLicense"
-          capture="environment"
           style="display:none"
           accept="image/*"
           ref="fileinput"
+          multiple
         />
         <v-layout row>
           <v-flex xs12 sm6 offset-xs1>
-            <img class="pa-2" :src="license" height="200" />
+            <img class="pt-3 edit-image" v-for="(image, i) in license" :key="i" :src="license[i]">
           </v-flex>
         </v-layout>
     </v-card-text>
@@ -157,12 +165,13 @@ export default {
       password: '',
       cpassword: '',
       phone: '',
-      license: '',
+      license: [],
       size: '',
       aLine1: '',
       aLine2: '',
       aTown: '',
       aCounty: '',
+      pCounty: '',
       aEircode: '',
       preferredTowns: [],
       value: true,
@@ -180,38 +189,46 @@ export default {
   },
   created () {
     this.getCounties()
-    this.getAllTowns()
   },
   methods: {
     onFilePick () {
       this.$refs.fileinput.click()
     },
     onUploadLicense (e) {
-      let image = e.target.files[0]
-      let d = new Date()
-      var storageRef = fb
-        .storage()
-        .ref('licenses/' + d.getTime() + '-' + image.name)
-      let uploadTask = storageRef.put(image)
+      for (var i = 0; i < e.target.files.length; i++) {
+        let image = e.target.files[i]
 
-      uploadTask.on(
-        'state_changed',
-        snapshot => {
+        this.postLicense(image)
+      }
+    },
+    postLicense: function (images) {
+      var licenseRef = this
+      return new Promise(function (resolve, reject) {
+        let d = new Date()
+        var storageRef = fb
+          .storage()
+          .ref('licenses/' + d.getTime() + '-' + images.name)
+        let uploadTask = storageRef.put(images)
+
+        uploadTask.on(
+          'state_changed',
+          snapshot => {
           // eslint-disable-next-line handle-callback-err
-        },
-        error => {
+          },
+          error => {
           // Handle unsuccessful uploads
-          console.log(error)
-        },
-        () => {
+            console.log(error)
+          },
+          () => {
           // Handle successful uploads on complete
           // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-          uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
-            console.log('File available at', downloadURL)
-            this.license = downloadURL.toString()
-          })
-        }
-      )
+            uploadTask.snapshot.ref.getDownloadURL().then(downloadURL => {
+              console.log('File available at', downloadURL)
+              licenseRef.license.push(downloadURL.toString())
+            })
+          }
+        )
+      })
     },
     getCounties: function () {
       TownService.fetchCounties()
@@ -238,13 +255,6 @@ export default {
         })
         .catch(err => {
           console.log(err)
-        })
-    },
-    getAllTowns () {
-      TownService.fetchAllTowns()
-        .then(res => {
-          this.alltowns = res.data
-          console.log(this.alltowns)
         })
     },
     submit () {
@@ -314,6 +324,10 @@ export default {
     aCounty: function (newVal, oldVal) {
       this.aCounty = newVal
       console.log(this.aCounty)
+    },
+    pCounty: function (newVal, oldVal) {
+      this.pCounty = newVal
+      console.log(this.pCounty)
     }
   }
 }

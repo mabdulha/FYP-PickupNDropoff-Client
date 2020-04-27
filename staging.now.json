@@ -1,8 +1,0 @@
-{
-  "name": "pnd-now",
-  "version": 1,
-  "alias": ["staging-pnd.now.sh"],
-  "env": {
-    "APP_ENV": "@staging_app_env"
-  }
-}

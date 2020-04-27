@@ -7,9 +7,7 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "cypress:run": "cypress run",
-    "start:server": "cd ./dist && httpserver -p 8080 & wait-on http://localhost:8080",
-    "ci:deploy:staging": "now -A staging.now.json --target=staging --token=$PND_TOKEN --scope=mthomps4  && now alias -A staging.now.json  --token=$PND_TOKEN",
-    "ci:deploy:prod": "now -A prod.now.json --target=production --token=$PND_TOKEN --scope=mthomps4  && now alias -A prod.now.json  --token=$PND_TOKEN"
+    "start:server": "cd ./dist && httpserver -p 8080 & wait-on http://localhost:8080"
   },
   "dependencies": {
     "axios": "^0.19.2",

@@ -17,7 +17,6 @@
                         style="display:none"
                         accept="image/*"
                         multiple
-                        capture="environment"
                         ref="fileinput"
                         />
                 <v-layout row>

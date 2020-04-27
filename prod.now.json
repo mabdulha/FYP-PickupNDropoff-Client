@@ -1,8 +1,0 @@
-{
-  "name": "pnd-now",
-  "version": 1,
-  "alias": ["prod-pnd.now.sh"],
-  "env": {
-    "APP_ENV": "@prod_app_env"
-  }
-}
