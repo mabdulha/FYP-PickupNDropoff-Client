@@ -1,9 +1,12 @@
 <template>
   <v-container fluid>
     <div>
+      <p>
+        Please choose if you wish to pickup the item or get it delivered
+      </p>
       <v-radio-group v-model="option" column :mandatory="true">
         <v-radio selected default label="Pickup" color="indigo" value="pickup"></v-radio>
-        <v-radio label="Delivery" color="indigo" value="delivery"></v-radio>
+        <v-radio label="Delivered" color="indigo" value="delivery"></v-radio>
       </v-radio-group>
     </div>
     <div v-if="option == 'delivery'">
@@ -14,6 +17,7 @@
             v-model="datetime"
             :text-field-props="textFieldProps"
             date-format="dd/MM/yyyy"
+            :rules="[inputcheck('Date and Time')]"
           ></v-datetime-picker>
         </div>
         <h2 class="pb-3">Delivery Address</h2>
@@ -79,10 +83,11 @@
     </div>
     <v-container fluid>
       <PayPal
+        env="sandbox"
         :amount="this.priceToString"
         currency="EUR"
+        :button-style="myStyle"
         :client="credentials"
-        env="sandbox"
         @payment-completed="payment_completed_callback"
         >
       </PayPal>
@@ -118,6 +123,12 @@ export default {
       credentials: {
         sandbox: process.env.VUE_APP_PAYPAL_SANDBOX_ID,
         production: ''
+      },
+      myStyle: {
+        label: 'checkout',
+        size: 'responsive',
+        shape: 'pill',
+        color: 'blue'
       },
       payment_completed: {
         payment_completed_callback () {
