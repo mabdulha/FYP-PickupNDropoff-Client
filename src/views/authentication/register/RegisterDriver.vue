@@ -72,12 +72,12 @@
           :items="counties"
           v-model="aCounty"
           label="County"
-          @change="getTowns(aCounty)"
+          @change="getaTowns(aCounty)"
           :rules="[inputcheck('county')]"
         />
         <v-select
           outlined
-          :items="towns"
+          :items="atowns"
           v-model="aTown"
           label="Town"
           item-text="town"
@@ -95,12 +95,12 @@
           :items="counties"
           v-model="pCounty"
           label="County"
-          @change="getTowns(pCounty)"
+          @change="getpTowns(pCounty)"
           :rules="[inputcheck('county')]"
         />
         <v-select
           outlined
-          :items="towns"
+          :items="ptowns"
           label="Preferred Towns"
           v-model="preferredTowns"
           multiple
@@ -180,7 +180,8 @@ export default {
       driver: {},
       sizes: ['Car', 'Caravan', 'Motorbike', 'Pickup', 'Van'],
       counties: [],
-      towns: [],
+      atowns: [],
+      ptowns: [],
       alltowns: [],
       aGeometry: [],
       alat: null,
@@ -237,10 +238,16 @@ export default {
           console.log(this.counties)
         })
     },
-    getTowns: function (county) {
+    getaTowns: function (county) {
       TownService.fetchTowns(county)
         .then(response => {
-          this.towns = response.data
+          this.atowns = response.data
+        })
+    },
+    getpTowns: function (county) {
+      TownService.fetchTowns(county)
+        .then(response => {
+          this.ptowns = response.data
         })
     },
     getLatlng () {
