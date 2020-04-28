@@ -48,7 +48,7 @@
           v-model="dEircode"
           :rules="[inputcheck('eircode')]"
         />
-        <v-btn color="primary" @click="getLatlng">Calculate Estimated Charge</v-btn>
+        <v-btn color="primary" @click="getDistance">Calculate Estimated Charge</v-btn>
         <v-layout column>
           <v-simple-table class="pt-5" v-if="distanceloaded == true" height="200px">
           <template v-slot:default>
@@ -78,7 +78,14 @@
       </v-form>
     </div>
     <v-container fluid>
-      <div class="pt-2" ref="paypal" />
+      <PayPal
+        :amount="this.priceToString"
+        currency="EUR"
+        :client="credentials"
+        env="sandbox"
+        @payment-completed="payment_completed_callback"
+        >
+      </PayPal>
     </v-container>
   </v-container>
 </template>
@@ -89,6 +96,7 @@ import DeliverService from '../services/deliveryservice'
 import TownService from '../services/townservice'
 import axios from 'axios'
 import moment from 'moment'
+import PayPal from 'vue-paypal-checkout'
 
 const dotenv = require('dotenv')
 dotenv.config()
@@ -106,6 +114,14 @@ export default {
         return v =>
           v.trim().length >= minlen ||
           `${propertyType} must be atleast ${minlen} characters long`
+      },
+      credentials: {
+        sandbox: process.env.VUE_APP_PAYPAL_SANDBOX_ID,
+        production: ''
+      },
+      payment_completed: {
+        payment_completed_callback () {
+        }
       },
       loaded: false,
       item2: {},
@@ -135,19 +151,16 @@ export default {
       distance: {}
     }
   },
+  components: {
+    PayPal
+  },
   created () {
     this.getCounties()
     this.getTowns(this.dCounty)
   },
-  mounted () {
-    this.paypalScript()
-  },
   methods: {
-    paypalScript () {
-      const script = document.createElement('script')
-      script.src = process.env.VUE_APP_PAYPAL_API
-      script.addEventListener('load', this.setLoaded)
-      document.body.appendChild(script)
+    payment_completed_callback (res) {
+      this.submit()
     },
     getCounties: function () {
       TownService.fetchCounties().then(response => {
@@ -158,22 +171,6 @@ export default {
       TownService.fetchTowns(county).then(response => {
         this.towns = response.data
       })
-    },
-    getLatlng () {
-      axios
-        .get(
-          `https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&address=${this.dEircode}&components=country:IE`
-        )
-        .then(response => {
-          this.dlat = response.data.results[0].geometry.location.lat
-          this.dlng = response.data.results[0].geometry.location.lng
-          console.log(this.dlat)
-          console.log(this.dlng)
-          this.getDistance()
-        })
-        .catch(err => {
-          console.log(err)
-        })
     },
     getDistance () {
       const url = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${this.origin}&destinations=${this.destination}&key=${API_KEY}`
@@ -186,35 +183,6 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    },
-    setLoaded () {
-      this.loaded = true
-      var ref = this
-      window.paypal
-        .Buttons({
-          style: {
-            label: 'checkout',
-            shape: 'pill'
-          },
-          createOrder: (data, actions) => {
-            return actions.order.create({
-              purchase_units: [
-                {
-                  name: this.item.title,
-                  description: this.item.description,
-                  amount: {
-                    currency: 'EUR',
-                    value: this.item.price + this.calcDistAmount
-                  }
-                }
-              ]
-            })
-          },
-          onApprove: function () {
-            ref.submit()
-          }
-        })
-        .render(this.$refs.paypal)
     },
     submit () {
       if (this.option === 'delivery') {
@@ -311,6 +279,10 @@ export default {
         total = 0
       }
       return Math.ceil(total)
+    },
+    priceToString: function () {
+      var str = this.item.price.toString()
+      return str
     },
     datetimeFormat: function () {
       return moment(this.datetime).format('DD-MM-YYYY HH:mm')

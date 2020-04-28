@@ -77,9 +77,9 @@ export default {
       let url = ''
 
       if (this.lat === 0 && this.lng === 0) {
-        url = `https://www.google.com/maps/embed/v1/directions?origin=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+        url = `https://www.google.com/maps/embed/v1/directions?origin=${dEircode}&destination=${pEircode}&key=${API_KEY}`
       } else {
-        url = `https://www.google.com/maps/embed/v1/directions?origin=${this.lat + ',' + this.lng}&waypoints=${pEircode}&destination=${dEircode}&key=${API_KEY}`
+        url = `https://www.google.com/maps/embed/v1/directions?origin=${this.lat + ',' + this.lng}&waypoints=${dEircode}&destination=${pEircode}&key=${API_KEY}`
       }
       return url
     }
