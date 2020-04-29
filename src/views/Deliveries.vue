@@ -54,6 +54,9 @@ export default {
   mounted () {
     this.getItems(this.driverID)
   },
+  updated () {
+    this.getItems(this.driverID)
+  },
   methods: {
     getItems (id) {
       DriverService.fetchDriverJobs(id)

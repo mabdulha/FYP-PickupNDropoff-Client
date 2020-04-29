@@ -51,7 +51,7 @@ export default {
     this.getItems(this.$store.state.driver.preferredTowns)
   },
   updated () {
-    // this.getItems(this.driver.preferredTowns)
+    this.getItems(this.driver.preferredTowns)
   },
   methods: {
     getDrivers (id) {
