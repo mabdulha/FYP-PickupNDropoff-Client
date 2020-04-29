@@ -55,7 +55,7 @@ export default {
     this.getItems(this.driverID)
   },
   updated () {
-    this.getItems(this.driverID)
+    // this.getItems(this.driverID)
   },
   methods: {
     getItems (id) {
@@ -118,6 +118,7 @@ export default {
       ItemService.updateItem(id, item)
         .then(response => {
           console.log(response)
+          window.location.reload()
         }).catch(err => {
           console.log(err)
         })
