@@ -41,6 +41,7 @@ export default {
         password: this.password
       }
       this.credentials = credentials
+      this.login(credentials)
     },
     login: function (credentials) {
       Authservice.loginDriver(credentials)
