@@ -249,6 +249,12 @@ export default {
       ItemService.updateItem(itemId, item)
         .then(response => {
           console.log(response)
+          this.$swal.fire({
+            position: 'top-end',
+            type: 'success',
+            text: 'Item Updated Successfully',
+            timer: 2000
+          })
           window.location.reload()
         })
         .catch(err => {

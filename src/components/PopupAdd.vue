@@ -281,6 +281,12 @@ export default {
         .then(response => {
           console.log(response)
           console.log(item)
+          this.$swal.fire({
+            position: 'top-end',
+            type: 'success',
+            text: 'Item Added Successfully',
+            timer: 2000
+          })
           window.location.reload()
         })
         .catch(err => {
