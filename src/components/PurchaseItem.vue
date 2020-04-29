@@ -253,6 +253,12 @@ export default {
       ItemService.updateItem(itemid, item)
         .then(response => {
           console.log(response)
+          this.$swal.fire({
+            position: 'top-end',
+            type: 'success',
+            title: 'Item Purchased Successfully',
+            timer: 2000
+          })
           this.$router.push(`/view/item/${itemid}/purchased`)
         })
         .catch(err => {

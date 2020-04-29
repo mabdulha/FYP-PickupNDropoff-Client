@@ -278,6 +278,12 @@ export default {
           this.$store.dispatch('setUserToken', response.data.token)
           this.$store.dispatch('setUser', response.data.user)
           this.$router.push('/')
+          this.$swal.fire({
+            position: 'top-end',
+            type: 'success',
+            text: 'Welcome ' + this.fname + ' you have Successfully Registered ',
+            timer: 2000
+          })
         })
         .catch(err => {
           console.log(err)

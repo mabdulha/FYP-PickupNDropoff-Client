@@ -121,7 +121,7 @@
         />
         <v-layout row>
           <v-flex xs12 sm6 offset-xs1>
-            <img class="pt-3 edit-image" v-for="(image, i) in license" :key="i" :src="license[i]">
+            <img class="pt-3 license-image" v-for="(image, i) in license" :key="i" :src="license[i]">
           </v-flex>
         </v-layout>
     </v-card-text>
@@ -267,30 +267,33 @@ export default {
     submit () {
       if (this.$refs.RegisterDriverForm.validate()) {
         if (this.password === this.cpassword) {
-          if (this.avatar === '') {
-            this.avatar =
-              'https://firebasestorage.googleapis.com/v0/b/pickupndropoff-fab91.appspot.com/o/avatars%2Fdefault-icon.png?alt=media&token=ea489f7f-3530-40ce-98ec-d45f10f5d83d'
+          if (this.license === '') {
+            var driver = {
+              fname: this.fname,
+              lname: this.lname,
+              email: this.email,
+              password: this.password,
+              phone: this.phone,
+              license: this.license,
+              size: this.size,
+              aLine1: this.aLine1,
+              aLine2: this.aLine2,
+              aTown: this.aTown,
+              aCounty: this.aCounty,
+              aEircode: this.aEircode,
+              aGeometry: this.aGeometry,
+              alat: this.alat,
+              alng: this.alng,
+              preferredTowns: this.preferredTowns
+            }
+            this.driver = driver
+            this.submitDriver(driver)
+          } else {
+            this.$swal.fire({
+              type: 'error',
+              title: 'You must upload License'
+            })
           }
-          var driver = {
-            fname: this.fname,
-            lname: this.lname,
-            email: this.email,
-            password: this.password,
-            phone: this.phone,
-            license: this.license,
-            size: this.size,
-            aLine1: this.aLine1,
-            aLine2: this.aLine2,
-            aTown: this.aTown,
-            aCounty: this.aCounty,
-            aEircode: this.aEircode,
-            aGeometry: this.aGeometry,
-            alat: this.alat,
-            alng: this.alng,
-            preferredTowns: this.preferredTowns
-          }
-          this.driver = driver
-          this.submitDriver(driver)
         } else {
           this.$swal.fire({
             title: 'Please Ensure the passwords both match',
@@ -322,6 +325,12 @@ export default {
           this.$store.dispatch('setDriverToken', response.data.token)
           this.$store.dispatch('setDriver', response.data.driver)
           this.$router.push('/')
+          this.$swal.fire({
+            position: 'top-end',
+            type: 'success',
+            text: 'Welcome ' + this.fname + ' you have Successfully Registered ',
+            timer: 2000
+          })
         }).catch(error => {
           console.log(error)
         })
@@ -339,3 +348,13 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+.license-image {
+  display: inline-block;
+  width: 100%;
+  margin-right: .5em;
+}
+
+</style>

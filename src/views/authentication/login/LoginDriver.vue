@@ -50,6 +50,12 @@ export default {
           this.$store.dispatch('setDriverToken', response.data.token)
           this.$store.dispatch('setDriver', response.data.driver)
           this.$router.push('/')
+          this.$swal.fire({
+            position: 'top-end',
+            type: 'success',
+            text: 'Welcome Back ' + this.email,
+            timer: 2000
+          })
         })
         .catch(err => {
           console.log(err)
