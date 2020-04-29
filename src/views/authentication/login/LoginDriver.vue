@@ -41,12 +41,10 @@ export default {
         password: this.password
       }
       this.credentials = credentials
-      this.login(credentials)
     },
     login: function (credentials) {
       Authservice.loginDriver(credentials)
         .then(response => {
-          console.log(response)
           this.$store.dispatch('setDriverToken', response.data.token)
           this.$store.dispatch('setDriver', response.data.driver)
           this.$router.push('/')

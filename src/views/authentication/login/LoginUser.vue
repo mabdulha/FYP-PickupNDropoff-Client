@@ -41,7 +41,6 @@ export default {
     login: function (credentials) {
       Authservice.loginUser(credentials)
         .then(response => {
-          console.log(response)
           this.$store.dispatch('setUserToken', response.data.token)
           this.$store.dispatch('setUser', response.data.user)
           this.$router.push('/')
