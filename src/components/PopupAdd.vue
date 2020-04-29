@@ -276,7 +276,7 @@ export default {
         this.dialog = false
       }
     },
-    submitItem: (item) => {
+    submitItem (item) {
       ItemService.addItem(item)
         .then(response => {
           console.log(response)

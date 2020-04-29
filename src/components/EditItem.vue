@@ -245,7 +245,7 @@ export default {
         this.dialog = false
       }
     },
-    updateItem: (itemId, item) => {
+    updateItem (itemId, item) {
       ItemService.updateItem(itemId, item)
         .then(response => {
           console.log(response)
