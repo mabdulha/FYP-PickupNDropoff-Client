@@ -9,5 +9,8 @@ export default {
   },
   fetchDriverJobs (id) {
     return Api().get(`/api/driver/${id}/deliveries`)
+  },
+  fetchDriverCompletedJobs (id) {
+    return Api().get(`/api/driver/${id}/deliveries/completed`)
   }
 }

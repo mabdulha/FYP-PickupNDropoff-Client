@@ -25,7 +25,7 @@
       </router-link>
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="!$store.state.isUserLoggedin && !$store.state.isDriverLoggedin">
-        <v-btn text v-for="button in buttons" :key="button.text" router :to="button.route">
+        <v-btn text v-for="button in buttons" :key="button.text" router :to="button.route" :class="button.class">
         <span>
           {{ button.text }}
         </span>
@@ -36,7 +36,7 @@
       </v-toolbar-items>
       <div>
         <span v-if="$store.state.isUserLoggedin"><PopupAdd /></span>
-      <v-btn v-if="$store.state.isUserLoggedin || $store.state.isDriverLoggedin" left text dark @click="logout">
+      <v-btn class="logout" v-if="$store.state.isUserLoggedin || $store.state.isDriverLoggedin" left text dark @click="logout">
         logout
       </v-btn>
       </div>
@@ -54,8 +54,8 @@ export default {
   data: () => ({
     drawer: false,
     buttons: [
-      { icon: 'mdi-login', text: 'Login', route: '/login/user' },
-      { icon: 'mdi-account-box', text: 'Register', route: '/register/user' }
+      { icon: 'mdi-login', text: 'Login', route: '/login/user', class: 'login' },
+      { icon: 'mdi-account-box', text: 'Register', route: '/register/user', class: 'register' }
     ]
   }),
   methods: {
@@ -85,7 +85,8 @@ export default {
       if (this.$store.state.isDriverLoggedin) {
         links = [
           { icon: 'mdi-home', text: 'Home', route: '/' },
-          { icon: 'mdi-bookmark', text: 'My Jobs', route: '/view/driver/jobs' }
+          { icon: 'local_shipping', text: 'My Jobs', route: '/view/driver/jobs' },
+          { icon: 'done_all', text: 'Completed Jobs', route: '/view/driver/jobs/completed' }
         ]
       }
       return links

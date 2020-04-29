@@ -10,6 +10,7 @@ import LoginUser from '../views/authentication/login/LoginUser.vue'
 import ItemView from '../views/ItemView.vue'
 import UserItemView from '../views/UserItemView'
 import DriversJobs from '../views/Deliveries'
+import DriversCompletedJobs from '../views/CompletedDeliveries'
 
 Vue.use(VueRouter)
 
@@ -75,6 +76,11 @@ const routes = [
     path: '/view/driver/jobs',
     name: 'drivers-jobs',
     component: DriversJobs
+  },
+  {
+    path: '/view/driver/jobs/completed',
+    name: 'drivers-jobs-completed',
+    component: DriversCompletedJobs
   }
 ]
 

@@ -1,7 +1,7 @@
 describe('Login Page', () => {
-  const username = 'mozza'
+  const username = 'moz'
   const password = 'secret'
-  beforeEach(() => {
+  before(() => {
     cy.visit('/login/user')
   })
   it('check if page contains tabs', () => {
@@ -22,8 +22,12 @@ describe('Login Page', () => {
     cy.get('.login-btn')
       .click()
   })
-  // it('should log out the user', () => {
-  //   cy.get('.v-btn__content')
-  //     .should('contain', 'logout')
-  // })
+  it('should log out the user', () => {
+    cy.get('.logout')
+      .click()
+  })
+  it('should contain login and register buttons on the nav bar', () => {
+    cy.get('.v-btn.login')
+    cy.get('.v-btn.login')
+  })
 })
