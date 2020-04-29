@@ -8,6 +8,7 @@ import Login from '../views/authentication/login/Login.vue'
 import LoginDriver from '../views/authentication/login/LoginDriver.vue'
 import LoginUser from '../views/authentication/login/LoginUser.vue'
 import ItemView from '../views/ItemView.vue'
+import PurchasedItemView from '../views/PurchasedItemView'
 import UserItemView from '../views/UserItemView'
 import DriversJobs from '../views/Deliveries'
 import DriversCompletedJobs from '../views/CompletedDeliveries'
@@ -66,6 +67,11 @@ const routes = [
     path: '/view/item/:id',
     name: 'item-view',
     component: ItemView
+  },
+  {
+    path: '/view/item/:id/purchased',
+    name: 'purchased-item-view',
+    component: PurchasedItemView
   },
   {
     path: '/view/items/my',

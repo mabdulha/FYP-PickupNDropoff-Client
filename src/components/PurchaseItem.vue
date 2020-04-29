@@ -249,10 +249,11 @@ export default {
           console.log(err)
         })
     },
-    updateItem: (itemid, item) => {
+    updateItem (itemid, item) {
       ItemService.updateItem(itemid, item)
         .then(response => {
           console.log(response)
+          this.$router.push(`/view/item/${itemid}/purchased`)
         })
         .catch(err => {
           console.log(err)
