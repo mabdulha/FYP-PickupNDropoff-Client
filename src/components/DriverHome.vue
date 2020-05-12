@@ -37,13 +37,14 @@ export default {
         headings: {
           title: 'Item',
           size: 'Size',
-          ddatetime: 'Date and Time',
-          estCharge: 'Recommended Charge',
+          ddatetime: 'Dropoff Date and Time',
+          pdatetime: 'Pickup Date and Time',
+          estCharge: 'Recommended Charge (€)',
           accept: 'Accept'
         },
         uniqueKey: '_id'
       },
-      columns: ['title', 'size', 'ddatetime', 'estCharge', 'accept']
+      columns: ['title', 'size', 'pdatetime', 'ddatetime', 'estCharge', 'accept']
     }
   },
   mounted () {

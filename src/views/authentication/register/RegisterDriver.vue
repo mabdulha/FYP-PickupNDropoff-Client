@@ -108,6 +108,7 @@
           item-text="town"
           :rules="[inputcheck('preferred towns')]"
         />
+        <p> Selected towns: {{ preferredTowns }} </p>
       </v-form>
       <v-btn class="primary" @click="onFilePick">Upload License</v-btn>
         <span class="pl-2">(mandatory)</span>
@@ -266,27 +267,34 @@ export default {
     },
     submit () {
       if (this.$refs.RegisterDriverForm.validate()) {
-        if (this.password === this.cpassword) {
-          var driver = {
-            fname: this.fname,
-            lname: this.lname,
-            email: this.email,
-            password: this.password,
-            phone: this.phone,
-            license: this.license,
-            size: this.size,
-            aLine1: this.aLine1,
-            aLine2: this.aLine2,
-            aTown: this.aTown,
-            aCounty: this.aCounty,
-            aEircode: this.aEircode,
-            aGeometry: this.aGeometry,
-            alat: this.alat,
-            alng: this.alng,
-            preferredTowns: this.preferredTowns
+        if (this.license.length < 1) {
+          if (this.password === this.cpassword) {
+            var driver = {
+              fname: this.fname,
+              lname: this.lname,
+              email: this.email,
+              password: this.password,
+              phone: this.phone,
+              license: this.license,
+              size: this.size,
+              aLine1: this.aLine1,
+              aLine2: this.aLine2,
+              aTown: this.aTown,
+              aCounty: this.aCounty,
+              aEircode: this.aEircode,
+              aGeometry: this.aGeometry,
+              alat: this.alat,
+              alng: this.alng,
+              preferredTowns: this.preferredTowns
+            }
+            this.driver = driver
+            this.submitDriver(driver)
+          } else {
+            this.$swal.fire({
+              title: 'Please Upload License',
+              type: 'warning'
+            })
           }
-          this.driver = driver
-          this.submitDriver(driver)
         } else {
           this.$swal.fire({
             title: 'Please Ensure the passwords both match',

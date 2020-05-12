@@ -39,6 +39,15 @@
               v-model="description"
               :rules="[inputcheck('Description'), minlen('Description', 3)]"
             />
+            <div>
+            <v-datetime-picker
+              label="Select Dropoff Date and Time"
+              v-model="datetime"
+              :text-field-props="textFieldProps"
+              date-format="dd/MM/yyyy"
+              :rules="[inputcheck('Date and Time')]"
+            ></v-datetime-picker>
+          </div>
             <v-select
               outlined
               :items="categories"
@@ -125,6 +134,7 @@
 <script>
 import ItemService from '../services/itemservice'
 import TownService from '../services/townservice'
+import moment from 'moment'
 import { fb } from '../firebase'
 import axios from 'axios'
 
@@ -161,7 +171,13 @@ export default {
       categories: ['Clothing', 'Electonics', 'Furniture', 'Health', 'Music', 'Parts', 'Outdoor', 'Other'],
       sizes: ['Small (Fit on a motorbike)', 'Medium (Fit into a car)', 'Large (Fit into a van)'],
       plat: null,
-      plng: null
+      plng: null,
+      datetime: null,
+      textFieldProps: {
+        outlined: true,
+        prependInnerIcon: 'calendar_today',
+        solo: true
+      }
     }
   },
   created () {
@@ -248,7 +264,8 @@ export default {
             pEircode: this.$store.state.user.aEircode,
             pGeometry: this.pGeometry,
             plat: this.plat,
-            plng: this.plng
+            plng: this.plng,
+            datetime: this.datetimeFormat
           }
           this.item = item
         } else {
@@ -268,7 +285,8 @@ export default {
             pEircode: this.pEircode,
             pGeometry: this.pGeometry,
             plat: this.plat,
-            plng: this.plng
+            plng: this.plng,
+            datetime: this.datetimeFormat
           }
           this.item = item2
         }
@@ -298,6 +316,11 @@ export default {
     pCounty: function (newVal, oldVal) {
       this.pCounty = newVal
       console.log(this.pCounty)
+    }
+  },
+  computed: {
+    datetimeFormat: function () {
+      return moment(this.datetime).format('DD-MM-YYYY HH:mm')
     }
   }
 }

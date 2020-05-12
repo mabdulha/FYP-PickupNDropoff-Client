@@ -218,6 +218,7 @@ export default {
             sellerName: this.userName,
             sellerNumber: this.user.phone,
             ddatetime: this.datetimeFormat,
+            pdatetime: this.item.datetime,
             estCharge: this.calcDistAmount
           }
           this.deliveryJob = deliveryJob
@@ -303,6 +304,7 @@ export default {
       return str
     },
     datetimeFormat: function () {
+      console.log(this.datetime)
       return moment(this.datetime).format('DD-MM-YYYY HH:mm')
     }
   }

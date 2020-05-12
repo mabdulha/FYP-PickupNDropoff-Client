@@ -31,7 +31,7 @@ export default {
       lng: 0,
       driverID: this.$store.state.driver._id,
       props: ['_id'],
-      columns: ['title', 'size', 'sellerName', 'sellerNumber', 'buyerName', 'buyerNumber', 'ddatetime', 'estCharge', 'delivered', 'cancel'],
+      columns: ['title', 'size', 'sellerName', 'sellerNumber', 'pdatetime', 'buyerName', 'buyerNumber', 'ddatetime', 'estCharge', 'delivered', 'cancel'],
       options: {
         perPage: 10,
         uniqueKey: '_id',
@@ -43,7 +43,8 @@ export default {
           sellerNumber: 'Seller Number',
           buyerName: 'Buyer Name',
           buyerNumber: 'Buyer Number',
-          ddatetime: 'Delivery Date and Time',
+          ddatetime: 'Dropoff Date and Time',
+          pdatetime: 'Pickup Date and Time',
           estCharge: 'Recommended Charge (€)',
           delivered: 'Delivered',
           cancel: 'Cancel'
