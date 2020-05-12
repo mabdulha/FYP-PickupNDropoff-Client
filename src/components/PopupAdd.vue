@@ -41,7 +41,7 @@
             />
             <div>
             <v-datetime-picker
-              label="Select Dropoff Date and Time"
+              label="Select Pickup Date and Time"
               v-model="datetime"
               :text-field-props="textFieldProps"
               date-format="dd/MM/yyyy"
